@@ -9,17 +9,13 @@ const ChatList = () => {
   return (
     <div className="search_bar px-5 pr-2 py-7 rounded-[25px] h-[calc(100vh-160px)]">
       <h3 className="text-2xl mb-4 font-bold">People</h3>
-
       <ul className="h-[calc(100%-40px)] overflow-auto pr-1">
         {chatlist.map((item, idx) => (
           <li
-            className="border-b-[1px] py-3.5 px-2  last:mb-0 last:border-b-0 rounded-lg hover:bg-blue-200"
+            className="border-b-[1px] py-3.5 px-2 last:mb-0 last:border-b-0 rounded-lg hover:bg-blue-200"
             key={idx}
           >
-            <Link
-              href="/"
-              className="flex items-start "
-            >
+            <Link href="/" className="flex items-start ">
               <figure className="size-[50px] rounded-full overflow-hidden mr-4">
                 <Image
                   src={item.userImg!}
