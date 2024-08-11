@@ -14,3 +14,10 @@ export type ChatListProps = {
   time?: string;
   readReciept?: ReadReceiptStatus;
 };
+
+export interface Message {
+  message: string;
+  senderId: number;
+  time: string;
+  date: string;
+}

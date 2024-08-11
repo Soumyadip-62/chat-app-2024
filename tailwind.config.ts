@@ -12,9 +12,17 @@ const config: Config = {
       container: {
         center: true,
         screens: {
-         
           "2xl": "1920px",
         },
+      },
+      screens: {
+        "3xl": { min: "1920px" },
+        "2xl": { min: "1441px" },
+        xl: { max: "1279px" },
+        lg: { max: "1024px" },
+        md: { max: "767px" },
+        sm: { max: "479px" },
+        xs: { max: "374px" },
       },
     },
   },
