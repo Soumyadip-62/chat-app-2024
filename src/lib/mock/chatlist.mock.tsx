@@ -1,0 +1,38 @@
+import { assets } from "@/assets";
+import { ChatListProps, ReadReceiptStatus } from "../types/chatlist.type";
+
+export const chatlist: ChatListProps[] = [
+  {
+    time: "12:00 am",
+    lastMessage: "hey! How are you?",
+    online: true,
+    readReciept: ReadReceiptStatus.SEEN,
+    userImg: assets.user1,
+    userName: "Soumyadip Pandit",
+  },
+  {
+    time: "12:00 am",
+    lastMessage: "hey! How are you?",
+    online: true,
+    readReciept: ReadReceiptStatus.SEEN,
+    userImg: assets.user1,
+    userName: "Soumyadip Pandit",
+  },
+  {
+    time: "12:00 am",
+    lastMessage: "hey! How are you?",
+    online: true,
+    readReciept: ReadReceiptStatus.SEEN,
+    userImg: assets.user1,
+    userName: "Soumyadip Pandit",
+  },
+
+  {
+    time: "12:00 am",
+    lastMessage: "hey! How are you?",
+    online: true,
+    readReciept: ReadReceiptStatus.SEEN,
+    userImg: assets.user1,
+    userName: "Soumyadip Pandit",
+  },
+];
