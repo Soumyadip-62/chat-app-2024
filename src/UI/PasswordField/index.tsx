@@ -12,12 +12,12 @@ const PasswordField = ({ value, ...props }: PasswordFieldprops) => {
     setshowPassword(!showPassword);
   };
   return (
-    <div className="flex common-input">
+    <div className="flex common-input bg-white">
       <input
         type={showPassword ? "text" : "password"}
         placeholder="Enter your password"
         value={value}
-        className="size-full outline-0"
+        className="size-full outline-0 bg-transparent"
         {...props}
       />
 

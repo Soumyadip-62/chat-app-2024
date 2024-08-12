@@ -2,12 +2,13 @@
 import GoogleIcon from "@/UI/icons/GoogleIcon";
 import PasswordField from "@/UI/PasswordField";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth, db } from "../../firebase";
-import { doc, setDoc, getDoc } from "firebase/firestore";
-import React from "react";
+import { auth, db, serverTimestamp, setDoc, getDoc, doc } from "../../firebase";
+
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "@/Redux/slices/UserSlice";
 import Cookies from "universal-cookie";
+import { collection, getDocs } from "firebase/firestore";
 
 const AuthComponent = () => {
   const cookies = new Cookies();
@@ -20,17 +21,18 @@ const AuthComponent = () => {
 
       const userDoc = await getDoc(doc(db, "users", result.user.uid));
 
+      console.log("Users list - - - - -", userDoc);
+
       dispatch(
         addUser({
           avatar: result.user.photoURL!,
           email: result.user.email!,
-          id: result.user.uid!,
+          uid: result.user.uid!,
           name: result.user.displayName!,
           token: result.user.refreshToken,
         })
       );
       if (!userDoc.exists()) {
-        // If the user doesn't exist, add them to the 'users' collection
         await setDoc(doc(db, "users", result.user.uid), {
           uid: result.user.uid,
           name: result.user.displayName,
@@ -38,6 +40,7 @@ const AuthComponent = () => {
           avatar: result.user.photoURL,
           createdAt: new Date(),
         });
+
         cookies.set("user-token", {
           token: result.user.refreshToken,
           user: {
@@ -52,6 +55,8 @@ const AuthComponent = () => {
       console.error(error);
     }
   };
+
+
   return (
     <div className="size-full flex justify-center items-center">
       <div className="login_card max-w-[650px] w-full">

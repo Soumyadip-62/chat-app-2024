@@ -3,12 +3,13 @@ import Cookies from "universal-cookie";
 
 
 
-interface User {
-  id?: string;
+export interface User {
+  uid?: string;
   name?: string;
   email?: string;
   token?: string;
   avatar?: string;
+  createdAt?: Date;
 }
 interface UserType {
   user: User | null;
