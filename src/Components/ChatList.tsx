@@ -7,7 +7,7 @@ import React from "react";
 
 const ChatList = () => {
   return (
-    <div className="search_bar px-5 pr-2 py-7 rounded-[25px] h-[calc(100vh-160px)]">
+    <div className="search_bar px-5 pr-2 py-7 rounded-[25px] h-[calc(100vh-220px)]">
       <h3 className="text-2xl mb-4 font-bold">People</h3>
       <ul className="h-[calc(100%-40px)] overflow-auto pr-1">
         {chatlist.map((item, idx) => (

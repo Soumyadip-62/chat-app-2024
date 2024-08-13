@@ -2,6 +2,7 @@ import { assets } from "@/assets";
 import AuthComponent from "@/Components/auth/AuthComponent";
 import ChatList from "@/Components/ChatList";
 import Searchbar from "@/Components/Searchbar";
+import UserDetails from "@/Components/UserDetails";
 import { useAppSelector } from "@/Redux/hooks";
 import React, { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
@@ -26,7 +27,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       ) : (
         <>
           {" "}
-          <div className="max-w-[480px] w-full space-y-8">
+          <div className="max-w-[480px] w-full space-y-4">
+            <UserDetails/>
             <Searchbar />
             <ChatList />
           </div>
