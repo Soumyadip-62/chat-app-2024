@@ -1,11 +1,12 @@
-import React, { HtmlHTMLAttributes, useState } from "react";
+import React, { HTMLAttributes, useState } from "react";
 import EyeOpenIcon from "../icons/EyeOpenIcon";
 import EyeCloseicon from "../icons/EyeCloseicon";
 
-interface PasswordFieldprops extends HtmlHTMLAttributes<HTMLInputElement> {
+interface PasswordFieldprops extends HTMLAttributes<HTMLInputElement> {
   value?: string;
+  name?:string;
 }
-const PasswordField = ({ value, ...props }: PasswordFieldprops) => {
+const PasswordField = ({ value, name, ...props }: PasswordFieldprops) => {
   const [showPassword, setshowPassword] = useState(false);
 
   const togglePassword = () => {
@@ -18,6 +19,7 @@ const PasswordField = ({ value, ...props }: PasswordFieldprops) => {
         placeholder="Enter your password"
         value={value}
         className="size-full outline-0 bg-transparent"
+        name={name}
         {...props}
       />
 

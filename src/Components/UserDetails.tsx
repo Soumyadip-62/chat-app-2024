@@ -1,8 +1,8 @@
 import { useAppSelector } from "@/Redux/hooks";
-import { removeUser } from "@/Redux/slices/UserSlice";
+import { addUser, removeUser } from "@/Redux/slices/UserSlice";
 import LogoutIcon from "@/UI/icons/LogoutIcon";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Cookies from "universal-cookie";
 
@@ -10,6 +10,15 @@ const UserDetails = () => {
   const userData = useAppSelector((state) => state.rootstate.userdata);
   const cookies = new Cookies();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    
+
+    if (cookies.get('user')) {
+      dispatch(addUser(cookies.get('user')))
+    }
+  }, [])
+  
 
   const handleLogout = () => {
     cookies.remove("user-token");

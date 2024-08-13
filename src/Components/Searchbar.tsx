@@ -1,7 +1,9 @@
 import { db } from "@/firebase";
 import { User } from "@/Redux/slices/UserSlice";
+import Avatar from "@/UI/CustomAvatar/Avatar";
 import SearchIcon from "@/UI/icons/SearchIcon";
 import { collection, getDocs, query, where } from "firebase/firestore";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 const Searchbar = () => {
@@ -56,14 +58,15 @@ const Searchbar = () => {
       />
 
       {searchResults.length > 0 && (
-        <div className="absolute bottom-[-100%] left-0 z-30 w-full bg-white search_bar rounded-lg p-4 ">
+        <div className="absolute top-[70px] left-0 z-30 w-full bg-white search_bar rounded-lg px-4 py-2">
           <ul>
             {searchResults.map((item, idx) => (
               <li
-                className="font-medium text-sm hover:font-bold transition-all duration-500 ease-in-out cursor-pointer"
+                className="font-medium text-sm hover:opacity-45 transition-all duration-500 ease-in-out cursor-pointer py-2 flex items-center space-x-3"
                 key={idx}
               >
-                {item.name}
+                <Avatar src={item.avatar!} alt={item.name!} />
+                <p className="text-base">{item.name}</p>
               </li>
             ))}
           </ul>
