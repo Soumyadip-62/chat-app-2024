@@ -1,11 +1,59 @@
 /* eslint-disable react/no-unescaped-entities */
 import PasswordField from "@/UI/PasswordField";
-import React, { FormEventHandler } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import React, { ChangeEvent, FormEventHandler, useState } from "react";
+import { auth } from "../../firebase";
+import { useDispatch } from "react-redux";
+import { addUser } from "@/Redux/slices/UserSlice";
+
+type Loginform = {
+  email: string;
+  password: string;
+};
 
 const Login = ({ toggleSignUp }: { toggleSignUp: () => void }) => {
-  const handleFormSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+  const dispatch = useDispatch();
+  const handleFormSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
+    const userDetails = await signInWithEmailAndPassword(
+      auth,
+      loginForm.email,
+      loginForm.password
+    );
+
+    const user = userDetails.user;
+    
+    dispatch(
+      addUser({
+        email: user.email!,
+        uid: user.uid!,
+        name: user.displayName!,
+        token: user.refreshToken,
+      })
+    );
+
+    // cookies.set("user-token", {
+    //   token: user.refreshToken,
+    // });
+    // cookies.set("user", {
+    //   email: user.email!,
+    //   id: user.uid!,
+    //   name: inputData.user_name!,
+    // });
   };
+
+  const [loginForm, setloginForm] = useState<Loginform>({
+    email: "",
+    password: "",
+  });
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setloginForm({
+      ...loginForm,
+      [name]: value,
+    });
+  };
+
   return (
     <>
       <div className="mb-20">
@@ -23,13 +71,20 @@ const Login = ({ toggleSignUp }: { toggleSignUp: () => void }) => {
             type="email"
             placeholder="Enter your mail"
             className="common-input"
+            name="email"
+            value={loginForm?.email}
+            onChange={handleChange}
           />
         </div>
         <div className="flex flex-col w-full mb-3">
           <label htmlFor="password" className="mb-2 ml-1 text-lg font-semibold">
             Password
           </label>
-          <PasswordField />
+          <PasswordField
+            name="password"
+            value={loginForm?.password}
+            onChange={handleChange}
+          />
         </div>
 
         <div>
