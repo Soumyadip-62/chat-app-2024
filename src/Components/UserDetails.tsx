@@ -1,5 +1,6 @@
 import { useAppSelector } from "@/Redux/hooks";
 import { addUser, removeUser } from "@/Redux/slices/UserSlice";
+import Avatar from "@/UI/CustomAvatar/Avatar";
 import LogoutIcon from "@/UI/icons/LogoutIcon";
 import Image from "next/image";
 import React, { useEffect } from "react";
@@ -12,10 +13,11 @@ const UserDetails = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    
-
     if (cookies.get('user')) {
       dispatch(addUser(cookies.get('user')))
+
+      console.log(cookies.get('user'));
+      
     }
   }, [])
   
@@ -27,14 +29,15 @@ const UserDetails = () => {
 
   return (
     <div className="flex w-full items-center p-3 px-5 search_bar rounded-2xl space-x-4 bg-white justify-start">
-      <figure className="leading-[0] rounded-full size-[48px] overflow-hidden border-[3px] ">
+      {/* <figure className="leading-[0] rounded-full size-[48px] overflow-hidden border-[3px] ">
         <Image
           src={userData.user?.avatar!}
           alt="userImg"
           width={50}
           height={50}
         />
-      </figure>
+      </figure> */}
+      <Avatar src={userData.user?.avatar!} alt={userData.user?.name!} isEditable/>
 
       <div>
       

@@ -2,9 +2,10 @@
 import PasswordField from "@/UI/PasswordField";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { ChangeEvent, FormEventHandler, useState } from "react";
-import { auth } from "../../firebase";
+import { auth, db, doc, getDoc } from "../../firebase";
 import { useDispatch } from "react-redux";
-import { addUser } from "@/Redux/slices/UserSlice";
+import { addUser, User } from "@/Redux/slices/UserSlice";
+import Cookies from "universal-cookie";
 
 type Loginform = {
   email: string;
@@ -12,6 +13,7 @@ type Loginform = {
 };
 
 const Login = ({ toggleSignUp }: { toggleSignUp: () => void }) => {
+  const cookies = new Cookies();
   const dispatch = useDispatch();
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
@@ -22,24 +24,32 @@ const Login = ({ toggleSignUp }: { toggleSignUp: () => void }) => {
     );
 
     const user = userDetails.user;
-    
-    dispatch(
-      addUser({
-        email: user.email!,
-        uid: user.uid!,
-        name: user.displayName!,
-        token: user.refreshToken,
-      })
-    );
+    const usersnap = await getDoc(doc(db, "users", user.uid));
+    const userDoc = usersnap.data() as User;
+    console.log(userDoc);
 
-    // cookies.set("user-token", {
-    //   token: user.refreshToken,
-    // });
-    // cookies.set("user", {
-    //   email: user.email!,
-    //   id: user.uid!,
-    //   name: inputData.user_name!,
-    // });
+    if (usersnap.exists()) {
+      dispatch(
+        addUser({
+          email: user.email!,
+          uid: user.uid!,
+          name: userDoc.name,
+          token: user.refreshToken,
+        })
+      );
+
+      cookies.set("user-token", {
+        token: user.refreshToken,
+      });
+      cookies.set("user", {
+        email: user.email!,
+        id: user.uid!,
+        name: userDoc.name,
+        avatar: userDoc.avatar,
+      });
+    } else {
+      alert("Wrong Email or Password");
+    }
   };
 
   const [loginForm, setloginForm] = useState<Loginform>({
