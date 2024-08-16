@@ -1,0 +1,18 @@
+.avatarWrap:hover .avatarEdit {
+  opacity: 1;
+}
+.avatarWrap:hover i {
+  background: #00000069;
+}
+.avatarEdit {
+  transition: all 200ms ease-in-out;
+  opacity: 0;
+  display: inline-flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 999;
+  top: 0;
+}

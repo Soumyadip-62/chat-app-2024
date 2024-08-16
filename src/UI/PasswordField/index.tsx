@@ -4,7 +4,7 @@ import EyeCloseicon from "../icons/EyeCloseicon";
 
 interface PasswordFieldprops extends HTMLAttributes<HTMLInputElement> {
   value?: string;
-  name?:string;
+  name?: string;
 }
 const PasswordField = ({ value, name, ...props }: PasswordFieldprops) => {
   const [showPassword, setshowPassword] = useState(false);
@@ -18,7 +18,7 @@ const PasswordField = ({ value, name, ...props }: PasswordFieldprops) => {
         type={showPassword ? "text" : "password"}
         placeholder="Enter your password"
         value={value}
-        className="size-full outline-0 bg-transparent"
+        className="size-full outline-0 bg-transparent outline-none"
         name={name}
         {...props}
       />
