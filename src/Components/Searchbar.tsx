@@ -1,4 +1,5 @@
 import { auth, db } from "@/firebase";
+import { ChatRoom } from "@/Redux/slices/ChatroomSlice";
 import { User } from "@/Redux/slices/UserSlice";
 import Avatar from "@/UI/CustomAvatar/Avatar";
 import SearchIcon from "@/UI/icons/SearchIcon";
@@ -13,6 +14,7 @@ import {
   where,
 } from "firebase/firestore";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 const Searchbar = () => {
@@ -22,6 +24,8 @@ const Searchbar = () => {
   const handleInputOnchange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setinputValue(event.target.value);
   };
+
+  const router = useRouter();
 
   useEffect(() => {
     const getUsers = async () => {
@@ -62,34 +66,45 @@ const Searchbar = () => {
     const currentUser = auth.currentUser;
 
     const chatroomRef = collection(db, "chatroom");
+    const userRef = doc(db, "users", uid);
+   const  currentUserRef = doc(db, 'users', currentUser?.uid!);
 
-    const q = query(
-      chatroomRef,
-      where("users", "array-contains", uid),
-    
-    );
+    const q = query(chatroomRef, where("users", "array-contains", userRef));
 
     const getChatSnap = await getDocs(q);
 
-    const chatRooms = getChatSnap.docs
-      .map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }))
-      
+    const chatRooms = getChatSnap.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
 
-     console.log(chatRooms);
-     
+    console.log(chatRooms);
+    const chatRoomData = chatRooms.filter(async (item) => {
+      const chatRoomsnapshot = await getDoc(doc(db, "chatroom", item.id));
+      const chatData = chatRoomsnapshot.data();
+      return (
+        chatData?.users.includes(doc(db, "users", uid)) &&
+        chatData.users.includes(doc(db, "users", currentUser?.uid!))
+      );
+    });
 
-    if (true ) {
-      console.log("chat already exists");
-    } else {
+    console.log("ChatRoom Data -----", chatRoomData);
+
+    if (chatRoomData.length <1 ) {
       const newChatroom = await addDoc(chatroomRef, {
-        users: [currentUser?.uid, uid],
+        users: [currentUserRef, userRef],
         messeges: [],
         lastMessage: "Start a Conversation",
         lastMessageTimeStamp: Timestamp.now(),
       });
+
+      router.push(`/chat/${newChatroom.id}`);
+      setinputValue("");
+    } else {
+      console.log("chat already exists");
+      router.push(`/chat/${chatRoomData.at(0)?.id}`);
+      setinputValue("");
+      
     }
   };
   return (
