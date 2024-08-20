@@ -14,14 +14,11 @@ const UserDetails = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-   
-    if (cookies.get('user')) {
-      dispatch(addUser(cookies.get('user')))
-      console.log(cookies.get('user'));
-      
+    if (cookies.get("user")) {
+      dispatch(addUser(cookies.get("user")));
+      console.log(cookies.get("user"));
     }
-  }, [])
-  
+  }, []);
 
   const handleLogout = () => {
     cookies.remove("user-token");
@@ -38,10 +35,13 @@ const UserDetails = () => {
           height={50}
         />
       </figure> */}
-      <Avatar src={userData.user?.avatar!} alt={userData.user?.name!} isEditable/>
+      <Avatar
+        src={userData.user?.avatar!}
+        alt={userData.user?.name!}
+        isEditable
+      />
 
       <div>
-      
         <h3 className="text-lg font-semibold">{userData.user?.name}</h3>{" "}
         <p className="text-sm">{userData.user?.email}</p>
       </div>
