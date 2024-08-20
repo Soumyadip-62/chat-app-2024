@@ -22,6 +22,7 @@ const UserDetails = () => {
 
   const handleLogout = () => {
     cookies.remove("user-token");
+    cookies.remove('user') 
     dispatch(removeUser());
   };
 

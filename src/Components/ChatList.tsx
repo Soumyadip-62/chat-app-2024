@@ -17,77 +17,84 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import Cookies from "universal-cookie";
 
 const ChatList = () => {
-  const chatList = useAppSelector(
+  const cookies = new Cookies();
+  const userData = useAppSelector((state) => state.rootstate.userdata.user);
+  const ChatRoomList = useAppSelector(
     (state) => state.rootstate.chatroom.chatRoomList
   );
-  const userData = useAppSelector((state) => state.rootstate.userdata);
-
-  const dispatch = useDispatch();
   const currentUser = auth.currentUser;
-  
 
- 
-  const chatroomRef = collection(db, "chatroom");
-  const GetUserImg = async (chatid: string) => {
-    const chatroom = await getDoc(doc(db, "chatroom", chatid));
-    const chatroomData = chatroom.data();
-    const users = await Promise.all(
-      chatroomData?.users.map(async (item: any) => {
-        {
-          const data = (await getDoc(doc(db, "users", item.id))).data();
-          return data;
-        }
-      })
-    );
+  const getUserData = async (Chatid: string) => {
+    try {
+      const ChatRoomSnap = await getDoc(doc(db, "chatroom", Chatid));
+      const Chatroom = ChatRoomSnap.data() as ChatRoom;
 
-    const otherUser = await users.filter(
-      (item) => item.id !== currentUser?.uid
-    );
-    if (otherUser.length > 0) {
-      return otherUser.at(0);
+      const usersList = await Promise.all(
+        Chatroom.users.map(async (item) =>
+          (await getDoc(doc(db, "users", item?.id!))).data()
+        )
+      );
+      console.log(usersList.at(0));
+      // Work from this section tommorrow just filter the logged in user from users list
+      return usersList;
+    } catch (error) {
+      console.error("Failed to fetch chat rooms:", error);
     }
   };
 
-  const getChatList = async () => {
-    const currentUserRef = doc(db, "users", userData.user?.id);
-    const chatroomQuery = query(
-      chatroomRef,
-      where("users", "array-contains", currentUserRef)
-    );
-    const chatList = await getDocs(chatroomQuery);
+  const GetChatList = async () => {
+    if (!userData?.id) {
+      console.error("User ID is undefined");
+      return;
+    }
 
-    const chatListSnap = chatList.docs.map((item) => {
-      return {
-        id: item.id,
-        ...item.data(),
-      };
-    });
+    try {
+      const chatListRef = collection(db, "chatroom");
+      const currentUserRef = doc(db, "users", userData.id);
 
-    chatListSnap.map(async (item: any) =>
-      dispatch(
+      const q = query(
+        chatListRef,
+        where("users", "array-contains", currentUserRef)
+      );
+
+      const querySnapshot = await getDocs(q);
+      const rooms = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      console.log(rooms);
+
+      rooms.map(async (item) => {
         addChatRoom({
-          userimg: (await GetUserImg(chatListSnap?.at(0)?.id!)).avatar as any,
-          lastMessage: item.lastMessage,
+          lastMessage: item?.lastMessage!,
           lastMessageTimeStamp: item.lastMessageTimeStamp,
           messages: item.messages,
           users: item.users,
-          userName: (await GetUserImg(chatListSnap?.at(0)?.id!)).name,
-        })
-      )
-    );
+          userimg: await getUserData(item.id),
+        });
+      });
+
+      // setChatRooms(rooms);
+    } catch (error) {
+      console.error("Failed to fetch chat rooms:", error);
+    }
   };
+
   useEffect(() => {
-   
-    getChatList();
-  }, []);
+    if (cookies.get("user")) {
+      GetChatList();
+    }
+  }, [userData]);
 
   return (
     <div className="search_bar px-5 pr-2 py-7 rounded-[25px] h-[calc(100vh-220px)]">
       <h3 className="text-2xl mb-4 font-bold">People</h3>
       <ul className="h-[calc(100%-40px)] overflow-auto pr-1">
-        {chatList?.map((item, idx) => (
+        {chatlist?.map((item, idx) => (
           <li
             className="border-b-[1px] py-3.5 px-2 last:mb-0 last:border-b-0 rounded-lg hover:bg-blue-200"
             key={idx}
@@ -95,7 +102,7 @@ const ChatList = () => {
             <Link href="/" className="flex items-start ">
               <figure className="size-[50px] rounded-full overflow-hidden mr-4">
                 <Image
-                  src={item.userimg!}
+                  src={item.userImg!}
                   alt="user1"
                   width={50}
                   height={50}
@@ -111,7 +118,7 @@ const ChatList = () => {
                 </div>
 
                 <div className="ml-auto flex flex-col items-end">
-                  <p></p>
+                  <p>{item.time}</p>
 
                   <i>
                     <DoubleTick />

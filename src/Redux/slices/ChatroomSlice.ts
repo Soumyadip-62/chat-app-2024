@@ -1,10 +1,11 @@
+import { ChatListProps } from "@/lib/types/chatlist.type";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface ChatRoom {
   lastMessage: string;
   lastMessageTimeStamp: Date; // Use `Date` type for timestamps
   messages: string[]; // Assuming this is an array of message strings
-  users: string[]; // Array of user IDs
+  users: any[]; // Array of user IDs
   userimg?: string | any;
   userName?: string;
 }
