@@ -2,7 +2,16 @@ import { auth, db } from "@/firebase";
 import { User } from "@/Redux/slices/UserSlice";
 import Avatar from "@/UI/CustomAvatar/Avatar";
 import SearchIcon from "@/UI/icons/SearchIcon";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  Timestamp,
+  where,
+} from "firebase/firestore";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
@@ -47,6 +56,42 @@ const Searchbar = () => {
       setsearchResults([]);
     }
   }, [inputValue]);
+
+  const handleNewChat = async (uid: string) => {
+    console.log("New Chat Button Clicked");
+    const currentUser = auth.currentUser;
+
+    const chatroomRef = collection(db, "chatroom");
+
+    const q = query(
+      chatroomRef,
+      where("users", "array-contains", uid),
+    
+    );
+
+    const getChatSnap = await getDocs(q);
+
+    const chatRooms = getChatSnap.docs
+      .map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }))
+      
+
+     console.log(chatRooms);
+     
+
+    if (true ) {
+      console.log("chat already exists");
+    } else {
+      const newChatroom = await addDoc(chatroomRef, {
+        users: [currentUser?.uid, uid],
+        messeges: [],
+        lastMessage: "Start a Conversation",
+        lastMessageTimeStamp: Timestamp.now(),
+      });
+    }
+  };
   return (
     <div className="shadow-xl rounded-[16px] w-full h-16 bg-white flex items-center justify-normal px-4 search_bar relative">
       <input
@@ -64,6 +109,7 @@ const Searchbar = () => {
               <li
                 className="font-medium text-sm hover:opacity-45 transition-all duration-500 ease-in-out cursor-pointer py-2 flex items-center space-x-3"
                 key={idx}
+                onClick={() => handleNewChat(item.uid!)}
               >
                 <Avatar src={item.avatar!} alt={item.name!} />
                 <p className="text-base">{item.name}</p>
