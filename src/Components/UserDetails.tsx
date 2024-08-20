@@ -1,3 +1,4 @@
+import { auth } from "@/firebase";
 import { useAppSelector } from "@/Redux/hooks";
 import { addUser, removeUser } from "@/Redux/slices/UserSlice";
 import Avatar from "@/UI/CustomAvatar/Avatar";
@@ -13,9 +14,9 @@ const UserDetails = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+   
     if (cookies.get('user')) {
       dispatch(addUser(cookies.get('user')))
-
       console.log(cookies.get('user'));
       
     }

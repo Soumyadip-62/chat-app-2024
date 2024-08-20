@@ -5,12 +5,14 @@ export interface ChatRoom {
   lastMessageTimeStamp: Date; // Use `Date` type for timestamps
   messages: string[]; // Assuming this is an array of message strings
   users: string[]; // Array of user IDs
+  userimg?: string | any;
+  userName?: string;
 }
 type ChatRoomType = {
-  chatRoomList: ChatRoom[] | null;
+  chatRoomList: ChatRoom[];
 };
 const initialState: ChatRoomType = {
-  chatRoomList: null,
+  chatRoomList: [],
 };
 
 export const ChatroomSlice = createSlice({
@@ -18,7 +20,9 @@ export const ChatroomSlice = createSlice({
   initialState: initialState,
   reducers: {
     addChatRoom: (state, action: PayloadAction<ChatRoom>) => {
-      state.chatRoomList = [...state.chatRoomList!, action.payload];
+      if (!state.chatRoomList.includes(action.payload)) {
+        state.chatRoomList = [...state.chatRoomList!, action.payload];
+      }
     },
   },
 });
