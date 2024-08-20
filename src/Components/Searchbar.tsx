@@ -1,4 +1,4 @@
-import { db } from "@/firebase";
+import { auth, db } from "@/firebase";
 import { User } from "@/Redux/slices/UserSlice";
 import Avatar from "@/UI/CustomAvatar/Avatar";
 import SearchIcon from "@/UI/icons/SearchIcon";
@@ -18,11 +18,9 @@ const Searchbar = () => {
     const getUsers = async () => {
       try {
         const usersCollection = collection(db, "users");
-        // const q = query(
-        //   usersCollection,
-        //   where("name", ">=", inputValue),
-        //   where("name", "<=", inputValue + "\uf8ff")
-        // );
+
+        const currentUser = auth.currentUser;
+
         const usersSnapshot = await getDocs(usersCollection);
         const usersList = usersSnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -30,8 +28,10 @@ const Searchbar = () => {
         })) as User[];
 
         setsearchResults(
-          usersList.filter((item) =>
-            item.name?.toLowerCase().includes(inputValue)
+          usersList.filter(
+            (item) =>
+              item.name?.toLowerCase().includes(inputValue) &&
+              currentUser?.uid !== item.id
           )
         );
         console.log("Users List:", usersList);

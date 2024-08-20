@@ -6,10 +6,11 @@ import Editicon from "../icons/Editicon";
 import CrossIcon from "../icons/CrossIcon";
 import SaveIcon from "../icons/SaveIcon";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { db, storage } from "../../firebase";
+import { db, storage, doc, auth } from "../../firebase";
 import Cookies from "universal-cookie";
-import { User } from "@/Redux/slices/UserSlice";
-import { doc, updateDoc } from "firebase/firestore";
+import { addUser, User } from "@/Redux/slices/UserSlice";
+import { getDoc, updateDoc } from "firebase/firestore";
+import { useDispatch } from "react-redux";
 
 type AvatarProps = {
   src: string;
@@ -20,7 +21,9 @@ type AvatarProps = {
 };
 
 const Avatar = ({ alt, size, src, className, isEditable }: AvatarProps) => {
-  const cookies = new Cookies()
+  const cookies = new Cookies();
+  const dispatch = useDispatch();
+
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,19 +48,45 @@ const Avatar = ({ alt, size, src, className, isEditable }: AvatarProps) => {
       const storageRef = ref(storage, `displayImages/${selectedImage.name}`);
       await uploadBytes(storageRef, selectedImage);
       const downloaUrl = await getDownloadURL(storageRef);
-      console.log('file is available at : ' , downloaUrl);
+      console.log("file is available at : ", downloaUrl);
+      const user = auth.currentUser;
+      if (user) {
+        const userRef = doc(db, "users", `${user.uid}`);
+        console.log(userRef, "UserREF");
+        await updateDoc(userRef, {
+          avatar: downloaUrl,
+        });
+        setSelectedImage(null);
+        setPreview(null);
 
-      const user = cookies.get('user') as User
-      // if (user) {
-        
-      //   await updateDoc(doc(db, "users", user.uid), {
-          
-      //   });
-      // }
-      
+        const usersnap = await getDoc(userRef);
+        const userDoc = usersnap.data() as User;
+        console.log(userDoc);
+
+        if (usersnap.exists()) {
+          dispatch(
+            addUser({
+              email: user.email!,
+              uid: user.uid!,
+              name: userDoc.name,
+              token: user.refreshToken,
+              avatar:userDoc.avatar
+            })
+          );
+
+          cookies.set("user-token", {
+            token: user.refreshToken,
+          });
+          cookies.set("user", {
+            email: user.email!,
+            id: user.uid!,
+            name: userDoc.name,
+            avatar: userDoc.avatar,
+          });
+        }
+      }
     } catch (error) {
-
-      console.error('Error uploading file:', error);
+      console.error("Error uploading file:", error);
     }
   };
   return (

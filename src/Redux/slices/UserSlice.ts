@@ -4,6 +4,7 @@ import Cookies from "universal-cookie";
 
 
 export interface User {
+  id?: any;
   uid?: string;
   name?: string;
   email?: string;
