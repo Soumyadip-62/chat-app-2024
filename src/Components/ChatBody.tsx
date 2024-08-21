@@ -17,7 +17,7 @@ const ChatBody = ({ messageList }: ChatBodyProps) => {
   const currentUser = auth.currentUser;
   return (
     <div className="py-4 h-[calc(100%-160px)] overflow-auto -mr-3 pr-3">
-      <div className="flex flex-col space-y-4">
+      <div className="flex flex-col space-y-4 h-full justify-end">
         {messageList.map((item, idx) => {
           return item.senderId?.id === userData?.id ? (
             <SentText {...item} />

@@ -15,11 +15,14 @@ const Chat = () => {
   const { id } = router.query;
   console.log("Chatid ----", id);
 
+  
+
   const userData = useAppSelector((state) => state.rootstate.userdata.user);
   const dispatch = useDispatch();
   const currentUser = auth.currentUser;
   const [otherUser, setotherUser] = useState<User>();
   const [messages, setmessages] = useState<Message[]>([]);
+  const [chatRoom, setchatRoom] = useState<ChatRoom>();
 
   const getChat = async () => {
     if (!id) {
@@ -33,6 +36,7 @@ const Chat = () => {
 
       if (chatRoomSnap.exists()) {
         const chatroom = chatRoomSnap.data();
+        setchatRoom(chatRoom)
 
         const usersList = await Promise.all(
           chatroom.users.map(async (item: { id: string }) =>
@@ -88,7 +92,7 @@ const Chat = () => {
     <div className="px-10 py-5 h-full">
       <ChatHeader {...otherUser} />
       <ChatBody messageList={messages} />
-      <InputBox />
+      <InputBox chatRoomid={id as string} />
     </div>
   );
 };
