@@ -4,6 +4,7 @@ import { chatlist } from "@/lib/mock/chatlist.mock";
 
 import { useAppSelector } from "@/Redux/hooks";
 import { addChatRoom, ChatRoom } from "@/Redux/slices/ChatroomSlice";
+import Avatar from "@/UI/CustomAvatar/Avatar";
 import DoubleTick from "@/UI/icons/DoubleTick";
 import {
   collection,
@@ -11,6 +12,7 @@ import {
   getDoc,
   getDocs,
   query,
+  Timestamp,
   where,
 } from "firebase/firestore";
 import Image from "next/image";
@@ -25,6 +27,7 @@ const ChatList = () => {
   const ChatRoomList = useAppSelector(
     (state) => state.rootstate.chatroom.chatRoomList
   );
+  const dispatch = useDispatch();
   const currentUser = auth.currentUser;
 
   const getUserData = async (Chatid: string) => {
@@ -39,7 +42,7 @@ const ChatList = () => {
       );
       console.log(usersList.at(0));
       // Work from this section tommorrow just filter the logged in user from users list
-      return usersList;
+      return usersList.filter((item) => item?.uid !== userData?.id).at(0);
     } catch (error) {
       console.error("Failed to fetch chat rooms:", error);
     }
@@ -68,15 +71,21 @@ const ChatList = () => {
 
       console.log(rooms);
 
-      rooms.map(async (item) => {
-        addChatRoom({
-          lastMessage: item?.lastMessage!,
-          lastMessageTimeStamp: item.lastMessageTimeStamp,
-          messages: item.messages,
-          users: item.users,
-          userimg: await getUserData(item.id),
-        });
+      rooms.map(async (item: any) => {
+        dispatch(
+          addChatRoom({
+            lastMessage: item?.lastMessage!,
+            lastMessageTimeStamp: item?.lastMessageTimeStamp,
+            messages: item?.messages,
+            users: item?.users,
+            userimg: await getUserData(item.id).then((data) => data?.avatar),
+            userName: await getUserData(item.id).then((data) => data?.name),
+            chatId: item.id,
+          })
+        );
       });
+
+      console.log(rooms);
 
       // setChatRooms(rooms);
     } catch (error) {
@@ -94,21 +103,17 @@ const ChatList = () => {
     <div className="search_bar px-5 pr-2 py-7 rounded-[25px] h-[calc(100vh-220px)]">
       <h3 className="text-2xl mb-4 font-bold">People</h3>
       <ul className="h-[calc(100%-40px)] overflow-auto pr-1">
-        {chatlist?.map((item, idx) => (
+        {ChatRoomList?.map((item, idx) => (
           <li
             className="border-b-[1px] py-3.5 px-2 last:mb-0 last:border-b-0 rounded-lg hover:bg-blue-200"
             key={idx}
           >
-            <Link href="/" className="flex items-start ">
-              <figure className="size-[50px] rounded-full overflow-hidden mr-4">
-                <Image
-                  src={item.userImg!}
-                  alt="user1"
-                  width={50}
-                  height={50}
-                  className="size-full object-cover"
-                />
-              </figure>
+            <Link
+              href={`/chat/${item.chatId}`}
+              className="flex items-start space-x-2 "
+            >
+              <Avatar src={item.userimg} alt={item.userName!} />
+
               <div className="max-w-[calc(100%-64px)] flex w-full">
                 <div className="w-[calc(100%-65px)]">
                   <h4 className="text-lg font-bold">{item.userName}</h4>
@@ -118,7 +123,15 @@ const ChatList = () => {
                 </div>
 
                 <div className="ml-auto flex flex-col items-end">
-                  <p>{item.time}</p>
+                  <p>
+                    {(item.lastMessageTimeStamp || Timestamp.now())
+                      .toDate()
+                      .toLocaleTimeString("en-US", {
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true,
+                      })}
+                  </p>
 
                   <i>
                     <DoubleTick />

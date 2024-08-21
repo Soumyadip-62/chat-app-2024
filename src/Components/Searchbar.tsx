@@ -1,5 +1,10 @@
 import { auth, db } from "@/firebase";
-import { ChatRoom } from "@/Redux/slices/ChatroomSlice";
+import { useAppSelector } from "@/Redux/hooks";
+import {
+  addChatRoom,
+  ChatRoom,
+  resetChatRoom,
+} from "@/Redux/slices/ChatroomSlice";
 import { User } from "@/Redux/slices/UserSlice";
 import Avatar from "@/UI/CustomAvatar/Avatar";
 import SearchIcon from "@/UI/icons/SearchIcon";
@@ -16,10 +21,13 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 const Searchbar = () => {
   const [inputValue, setinputValue] = useState<string>("");
   const [searchResults, setsearchResults] = useState<User[]>([]);
+  const userData = useAppSelector((state) => state.rootstate.userdata.user);
+  const dispatch = useDispatch();
 
   const handleInputOnchange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setinputValue(event.target.value);
@@ -43,7 +51,7 @@ const Searchbar = () => {
         setsearchResults(
           usersList.filter(
             (item) =>
-              item.name?.toLowerCase().includes(inputValue) &&
+              item.name?.toLowerCase().startsWith(inputValue) &&
               currentUser?.uid !== item.id
           )
         );
@@ -60,51 +68,123 @@ const Searchbar = () => {
       setsearchResults([]);
     }
   }, [inputValue]);
+  const getUserData = async (Chatid: string) => {
+    try {
+      const ChatRoomSnap = await getDoc(doc(db, "chatroom", Chatid));
+      const Chatroom = ChatRoomSnap.data() as ChatRoom;
+
+      const usersList = await Promise.all(
+        Chatroom.users.map(async (item) =>
+          (await getDoc(doc(db, "users", item?.id!))).data()
+        )
+      );
+      console.log(usersList.at(0));
+      // Work from this section tommorrow just filter the logged in user from users list
+      return usersList.filter((item) => item?.uid !== userData?.id).at(0);
+    } catch (error) {
+      console.error("Failed to fetch chat rooms:", error);
+    }
+  };
+
+  const GetChatList = async () => {
+    if (!userData?.id) {
+      console.error("User ID is undefined");
+      return;
+    }
+
+    try {
+      const chatListRef = collection(db, "chatroom");
+      const currentUserRef = doc(db, "users", userData.id);
+
+      const q = query(
+        chatListRef,
+        where("users", "array-contains", currentUserRef)
+      );
+
+      const querySnapshot = await getDocs(q);
+      const rooms = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      console.log(rooms);
+
+      rooms.map(async (item: any) => {
+        dispatch(
+          addChatRoom({
+            lastMessage: item?.lastMessage!,
+            lastMessageTimeStamp: item?.lastMessageTimeStamp,
+            messages: item?.messages,
+            users: item?.users,
+            userimg: await getUserData(item.id).then((data) => data?.avatar),
+            userName: await getUserData(item.id).then((data) => data?.name),
+            chatId: item.id,
+          })
+        );
+      });
+
+      console.log(rooms);
+
+      // setChatRooms(rooms);
+    } catch (error) {
+      console.error("Failed to fetch chat rooms:", error);
+    }
+  };
 
   const handleNewChat = async (uid: string) => {
     console.log("New Chat Button Clicked");
     const currentUser = auth.currentUser;
 
+    if (!currentUser) {
+      console.error("No current user found");
+      return;
+    }
+
     const chatroomRef = collection(db, "chatroom");
     const userRef = doc(db, "users", uid);
-   const  currentUserRef = doc(db, 'users', currentUser?.uid!);
+    const currentUserRef = doc(db, "users", currentUser.uid);
 
+    // Query chatrooms that contain the other user
     const q = query(chatroomRef, where("users", "array-contains", userRef));
-
     const getChatSnap = await getDocs(q);
 
-    const chatRooms = getChatSnap.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const chatRooms = await Promise.all(
+      getChatSnap.docs.map(async (doc) => {
+        const chatRoomData = doc.data();
+        const chatRoomId = doc.id;
+        const users = chatRoomData.users;
 
-    console.log(chatRooms);
-    const chatRoomData = chatRooms.filter(async (item) => {
-      const chatRoomsnapshot = await getDoc(doc(db, "chatroom", item.id));
-      const chatData = chatRoomsnapshot.data();
-      return (
-        chatData?.users.includes(doc(db, "users", uid)) &&
-        chatData.users.includes(doc(db, "users", currentUser?.uid!))
-      );
-    });
+        // Check if the chatroom also contains the current user
+        const containsCurrentUser = users.some(
+          (userDoc: any) => userDoc.id === currentUser.uid
+        );
 
-    console.log("ChatRoom Data -----", chatRoomData);
+        return containsCurrentUser ? { id: chatRoomId, ...chatRoomData } : null;
+      })
+    );
 
-    if (chatRoomData.length <1 ) {
+    // Filter out null values
+    const existingChatRooms = chatRooms.filter((room) => room !== null);
+
+    console.log("Existing ChatRooms:", existingChatRooms);
+
+    if (existingChatRooms.length === 0) {
+      // If no chatroom exists, create a new one
       const newChatroom = await addDoc(chatroomRef, {
         users: [currentUserRef, userRef],
-        messeges: [],
+        messages: [],
         lastMessage: "Start a Conversation",
         lastMessageTimeStamp: Timestamp.now(),
       });
+      GetChatList();
 
       router.push(`/chat/${newChatroom.id}`);
       setinputValue("");
     } else {
-      console.log("chat already exists");
-      router.push(`/chat/${chatRoomData.at(0)?.id}`);
+      // If chatroom exists, navigate to it
+      console.log("Chat already exists");
+      router.push(`/chat/${existingChatRooms[0]?.id}`);
       setinputValue("");
-      
     }
   };
   return (
