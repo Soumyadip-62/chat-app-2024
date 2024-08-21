@@ -1,15 +1,11 @@
-import { Message } from "@/lib/types/chatlist.type";
+import { Message } from "@/lib/types/messages.type";
 import React from "react";
 
-const Recievedtext = ({ date, message, senderId, time }: Message) => {
+const Recievedtext = ({ senderId, text, timeStamp }: Message) => {
   return (
     <div className="self-start max-w-[530px]">
-      <p className="text-base bg-[#e7e7e7] p-3 rounded-[20px] mb-1">
-        {message}
-      </p>
-      <span className="pl-2 text-sm">
-        {date} - {time}
-      </span>
+      <p className="text-base bg-[#e7e7e7] p-3 rounded-[20px] mb-1">{text}</p>
+      <span className="pl-2 text-sm">{/* {date} - {time} */}</span>
     </div>
   );
 };

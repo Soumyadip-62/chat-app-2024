@@ -1,26 +1,21 @@
 import { assets } from "@/assets";
+import { User } from "@/Redux/slices/UserSlice";
+import Avatar from "@/UI/CustomAvatar/Avatar";
 import ThreeDot from "@/UI/icons/ThreeDot";
 import Image from "next/image";
 import React from "react";
 
-const ChatHeader = () => {
+const ChatHeader = ({ avatar, createdAt, email, id, name, uid }: User) => {
   return (
-    <div className="flex items-start pb-6 border-b border-[#B4ABAB]">
-      <figure className="size-[60px] overflow-hidden rounded-full mr-5">
-        <Image
-          src={assets.user1}
-          alt="user_name"
-          width={50}
-          height={50}
-          className="size-full object-cover"
-        />
-      </figure>
+    <div className="flex items-start pb-6 border-b border-[#B4ABAB] space-x-3">
+      <Avatar src={avatar!} alt={name!} size={60} />
+      
       <div>
-        <h2 className="text-lg font-bold">John Doe</h2>
-        <p>Online</p>
+        <h2 className="text-lg font-bold">{name}</h2>
+        <p>{email}</p>
       </div>
 
-      <div className="ml-auto">
+      <div className="!ml-auto">
         <button>
           <ThreeDot />
         </button>

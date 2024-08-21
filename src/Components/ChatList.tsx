@@ -76,7 +76,7 @@ const ChatList = () => {
           addChatRoom({
             lastMessage: item?.lastMessage!,
             lastMessageTimeStamp: item?.lastMessageTimeStamp,
-            messages: item?.messages,
+            messages: item?.messeges,
             users: item?.users,
             userimg: await getUserData(item.id).then((data) => data?.avatar),
             userName: await getUserData(item.id).then((data) => data?.name),
