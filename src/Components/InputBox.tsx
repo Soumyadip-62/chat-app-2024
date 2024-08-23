@@ -23,7 +23,7 @@ const InputBox = ({ chatRoomid }: InputBoxProps) => {
     setinputValue(event.target.value);
   };
 
-  const currentuser = auth.currentUser
+  const currentuser = auth.currentUser;
 
   const HandleMessageSubmit = async () => {
     const messageref = collection(db, "messages");
@@ -37,7 +37,6 @@ const InputBox = ({ chatRoomid }: InputBoxProps) => {
 
       console.log(chatRoomid);
       if (chatRoomid && newmessage.id) {
-        
         const chatroomRef = doc(db, "chatroom", chatRoomid);
         await updateDoc(chatroomRef, {
           messages: arrayUnion(newmessage),
@@ -61,7 +60,7 @@ const InputBox = ({ chatRoomid }: InputBoxProps) => {
       </div>
       <textarea
         name="chat_input"
-        className="w-full outline-0 rounded-xl h-full p-1 resize-none bg-transparent font-medium"
+        className="w-full outline-none rounded-xl h-full p-1 resize-none bg-transparent font-medium"
         placeholder="Type a message"
         value={inputValue}
         onChange={handleChange}
