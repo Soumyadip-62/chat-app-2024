@@ -17,17 +17,15 @@ const Chat = () => {
   console.log("Chatid ----", id);
 
   const userData = useAppSelector((state) => state.rootstate.userdata.user);
-  const openSidebar = useAppSelector((state) => state.rootstate.counter.openSideBar);
+  const openSidebar = useAppSelector(
+    (state) => state.rootstate.counter.openSideBar
+  );
 
   const dispatch = useDispatch();
   const currentUser = auth.currentUser;
   const [otherUser, setotherUser] = useState<User>();
   const [messages, setmessages] = useState<Message[]>([]);
   const [chatRoom, setchatRoom] = useState<ChatRoom>();
-
- 
-
-  
 
   useEffect(() => {
     if (!id) {
@@ -72,10 +70,7 @@ const Chat = () => {
                 return null; // Handle errors during fetching
               }
             })
-
-
           );
-         
 
           setmessages(messagelist); // Set messages data
           setotherUser(
@@ -95,7 +90,7 @@ const Chat = () => {
     <div className={`px-10 py-5 h-full lg:p-0`}>
       <ChatHeader {...otherUser} />
       <ChatBody messageList={messages} />
-      
+
       <InputBox chatRoomid={id as string} />
     </div>
   );

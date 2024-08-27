@@ -12,11 +12,10 @@ const ChatHeader = ({ avatar, createdAt, email, id, name, uid }: User) => {
   const dispatch= useDispatch()
   return (
     <div className="flex items-start  pb-6 border-b border-[#B4ABAB] space-x-3">
-      <button className="self-center" onClick={()=>dispatch(toggleSidebar())}>
+      <button className="self-center hidden lg:block" onClick={()=>dispatch(toggleSidebar())}>
         <BackArrowIcon />
       </button>
       <Avatar src={avatar!} alt={name!} />
-
       <div>
         <h2 className="text-lg font-bold">{name}</h2>
         <p>{email}</p>
