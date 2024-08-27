@@ -70,7 +70,7 @@ const Avatar = ({ alt, size, src, className, isEditable }: AvatarProps) => {
               uid: user.uid!,
               name: userDoc.name,
               token: user.refreshToken,
-              avatar:userDoc.avatar
+              avatar: userDoc.avatar,
             })
           );
 
@@ -115,7 +115,9 @@ const Avatar = ({ alt, size, src, className, isEditable }: AvatarProps) => {
             className="size-full object-cover"
           />
         ) : (
-          <i className="size-full flex items-center justify-center bg-slate-300">
+          <i
+            className={`size-full flex items-center justify-center bg-slate-300`}
+          >
             <Usericon />
           </i>
         )}

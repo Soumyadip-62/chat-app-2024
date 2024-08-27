@@ -6,18 +6,21 @@ import { useAppSelector } from "@/Redux/hooks";
 import { addChatRoom, ChatRoom } from "@/Redux/slices/ChatroomSlice";
 import Avatar from "@/UI/CustomAvatar/Avatar";
 import DoubleTick from "@/UI/icons/DoubleTick";
+import { unsubscribe } from "diagnostics_channel";
 import {
   collection,
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
+  orderBy,
   query,
   Timestamp,
   where,
 } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Cookies from "universal-cookie";
 
@@ -27,6 +30,7 @@ const ChatList = () => {
   const ChatRoomList = useAppSelector(
     (state) => state.rootstate.chatroom.chatRoomList
   );
+  const [chatRoomList, setchatRoomList] = useState<ChatRoom[]>([]);
   const dispatch = useDispatch();
   const currentUser = auth.currentUser;
 
@@ -48,62 +52,70 @@ const ChatList = () => {
     }
   };
 
-  const GetChatList = async () => {
+  useEffect(() => {
+    if (!cookies.get("user")) return;
+
     if (!userData?.id) {
       console.error("User ID is undefined");
       return;
     }
 
-    try {
-      const chatListRef = collection(db, "chatroom");
-      const currentUserRef = doc(db, "users", userData.id);
+    const chatListRef = collection(db, "chatroom");
+    const currentUserRef = doc(db, "users", userData.id);
 
-      const q = query(
-        chatListRef,
-        where("users", "array-contains", currentUserRef)
-      );
+    const q = query(
+      chatListRef,
+      where("users", "array-contains", currentUserRef)
+    );
 
-      const querySnapshot = await getDocs(q);
-      const rooms = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+    // Set up the snapshot listener
+    const unsubscribe = onSnapshot(q, async (chatList) => {
+      try {
+        const rooms = await Promise.all(
+          chatList.docs.map(async (doc) => {
+            const data = doc.data();
+            const userData = await getUserData(doc.id);
 
-      console.log(rooms);
-
-      rooms.map(async (item: any) => {
-        dispatch(
-          addChatRoom({
-            lastMessage: item?.lastMessage!,
-            lastMessageTimeStamp: item?.lastMessageTimeStamp,
-            messages: item?.messeges,
-            users: item?.users,
-            userimg: await getUserData(item.id).then((data) => data?.avatar),
-            userName: await getUserData(item.id).then((data) => data?.name),
-            chatId: item.id,
+            return {
+              id: doc.id,
+              lastMessage: data?.lastMessage,
+              lastMessageTimeStamp: data?.lastMessageTimeStamp,
+              messages: data?.messages,
+              users: data?.users,
+              userimg: userData?.avatar,
+              userName: userData?.name,
+              chatId: doc.id,
+            };
           })
         );
-      });
 
-      console.log(rooms);
+        const sortedRooms = rooms.sort((a, b) => {
+          return (b.lastMessageTimeStamp || 0) - (a.lastMessageTimeStamp || 0);
+        });
 
-      // setChatRooms(rooms);
-    } catch (error) {
-      console.error("Failed to fetch chat rooms:", error);
-    }
-  };
+        // Dispatch actions to update the chat room state in the store
+        sortedRooms.forEach((room) => {
+          dispatch(addChatRoom(room));
+        });
 
-  useEffect(() => {
-    if (cookies.get("user")) {
-      GetChatList();
-    }
+        // Update the local state with the sorted rooms
+        setchatRoomList(sortedRooms);
+
+        console.log("Rooms:", rooms);
+      } catch (error) {
+        console.error("Failed to fetch chat rooms:", error);
+      }
+    });
+
+    // Cleanup the snapshot listener when the component unmounts
+    return () => unsubscribe();
   }, [userData]);
 
   return (
     <div className="search_bar px-5 pr-2 py-7 rounded-[25px] h-[calc(100vh-220px)]">
-      <h3 className="text-2xl mb-4 font-bold">People</h3>
+      <h3 className="text-2xl mb-4 font-bold">Peoples</h3>
       <ul className="h-[calc(100%-40px)] overflow-auto pr-1">
-        {ChatRoomList?.map((item, idx) => (
+        {chatRoomList?.map((item, idx) => (
           <li
             className="border-b-[1px] py-3.5 px-2 last:mb-0 last:border-b-0 rounded-lg hover:bg-blue-200"
             key={idx}

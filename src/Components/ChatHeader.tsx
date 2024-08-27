@@ -8,7 +8,7 @@ import React from "react";
 const ChatHeader = ({ avatar, createdAt, email, id, name, uid }: User) => {
   return (
     <div className="flex items-start pb-6 border-b border-[#B4ABAB] space-x-3">
-      <Avatar src={avatar!} alt={name!} size={60} />
+      <Avatar src={avatar!} alt={name!}  />
       
       <div>
         <h2 className="text-lg font-bold">{name}</h2>

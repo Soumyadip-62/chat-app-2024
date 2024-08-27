@@ -20,9 +20,9 @@ const ChatBody = ({ messageList }: ChatBodyProps) => {
       <div className="flex flex-col space-y-4 h-full justify-end">
         {messageList.map((item, idx) => {
           return item.senderId?.id === userData?.id ? (
-            <SentText {...item} />
+            <SentText {...item} key={idx} />
           ) : (
-            <Recievedtext {...item} />
+            <Recievedtext {...item} key={idx} />
           );
         })}
       </div>

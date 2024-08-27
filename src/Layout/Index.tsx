@@ -26,13 +26,12 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <AuthComponent />
       ) : (
         <>
-          {" "}
-          <div className="max-w-[480px] w-full space-y-4">
-            <UserDetails/>
+          <div className={`max-w-[480px] w-full space-y-4 lg:hidden`}>
+            <UserDetails />
             <Searchbar />
             <ChatList />
           </div>
-          <div className="max-w-[calc(100%-480px)] w-full search_bar ml-8 rounded-[25px] h-[calc(100vh-62px)]">
+          <div className={`max-w-[calc(100%-480px)] w-full search_bar ml-8 rounded-[25px] h-[calc(100vh-62px)] lg:max-w-full lg:ml-0`}>
             {children}
           </div>
         </>

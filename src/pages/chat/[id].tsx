@@ -6,9 +6,14 @@ import { Message } from "@/lib/types/messages.type";
 import { useAppSelector } from "@/Redux/hooks";
 import { ChatRoom } from "@/Redux/slices/ChatroomSlice";
 import { User } from "@/Redux/slices/UserSlice";
+import { onSnapshot } from "firebase/firestore";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+
+
+
+
 
 const Chat = () => {
   const router = useRouter();
@@ -24,69 +29,65 @@ const Chat = () => {
   const [messages, setmessages] = useState<Message[]>([]);
   const [chatRoom, setchatRoom] = useState<ChatRoom>();
 
-  const getChat = async () => {
+  useEffect(() => {
     if (!id) {
       console.error("Chat ID is not available");
       return;
     }
+  
     const chatroomRef = doc(db, "chatroom", id as string);
-    try {
-      const chatRoomSnap = await getDoc(chatroomRef);
-      console.log(chatRoomSnap.data());
-
-      if (chatRoomSnap.exists()) {
-        const chatroom = chatRoomSnap.data();
-        setchatRoom(chatRoom)
-
-        const usersList = await Promise.all(
-          chatroom.users.map(async (item: { id: string }) =>
-            (await getDoc(doc(db, "users", item?.id!))).data()
-          )
-        );
-
-        const messagelist = await Promise.all(
-          chatroom.messages.map(async (item: { id: string }) => {
-            if (!item.id) {
-              console.warn("Message ID is missing");
-              return null; // Skip this message
-            }
-
-            try {
-              const messageRef = doc(db, "messages", item.id);
-              const messageSnap = await getDoc(messageRef);
-
-              // if (messageSnap.exists()) {
-              return messageSnap.data(); // Return message data if document exists
-              // } else {
-              //   console.warn(`No message found with ID: ${item.id}`);
-              //   return null; // Handle case where document doesn't exist
-              // }
-            } catch (error) {
-              console.error(
-                `Error fetching message with ID: ${item.id}`,
-                error
-              );
-              return null; // Handle errors during fetching
-            }
-          })
-        );
-        console.log(messagelist);
-        setmessages(messagelist)
-
-        setotherUser(
-          usersList.filter((item) => item?.uid !== userData?.id).at(0)
-        );
+  
+    // Set up the snapshot listener
+    const unsubscribe = onSnapshot(chatroomRef, async (chatRoomSnap) => {
+      try {
+        const chatroomData = chatRoomSnap.data();
+  
+        if (chatRoomSnap.exists() && chatroomData) {
+          setchatRoom(chatroomData as ChatRoom); // Set chat room data
+  
+          // Fetch all users in the chat room
+          const usersList = await Promise.all(
+            chatroomData.users.map(async (item: { id: string }) =>
+              (await getDoc(doc(db, "users", item.id))).data()
+            )
+          );
+  
+          // Fetch all messages in the chat room
+          const messagelist = await Promise.all(
+            chatroomData.messages.map(async (item: { id: string }) => {
+              if (!item.id) {
+                console.warn("Message ID is missing");
+                return null; // Skip this message
+              }
+  
+              try {
+                const messageRef = doc(db, "messages", item.id);
+                const messageSnap = await getDoc(messageRef);
+                return messageSnap.data(); // Return message data if document exists
+              } catch (error) {
+                console.error(
+                  `Error fetching message with ID: ${item.id}`,
+                  error
+                );
+                return null; // Handle errors during fetching
+              }
+            })
+          );
+  
+          setmessages(messagelist); // Set messages data
+          setotherUser(
+            usersList.filter((item) => item?.uid !== userData?.id).at(0)
+          ); // Set other user data
+        }
+      } catch (error) {
+        console.error("Could not fetch chat room data:", error);
       }
-    } catch (error) {
-      console.log("could not find chatroom", error);
-    }
-  };
-
-  useEffect(() => {
-    if (id) {
-      getChat();
-    }
-  }, [id]);
+    });
+  
+    // Cleanup the listener when the component unmounts
+    return () => unsubscribe();
+  }, [id]); // Dependency array includes chatId
+  
 
   return (
     <div className="px-10 py-5 h-full">

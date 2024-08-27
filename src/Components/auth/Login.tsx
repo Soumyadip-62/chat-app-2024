@@ -67,7 +67,7 @@ const Login = ({ toggleSignUp }: { toggleSignUp: () => void }) => {
   return (
     <>
       <div className="mb-20">
-        <h1 className="text-6xl mb-6 text-center  font-semibold">
+        <h1 className="text-6xl mb-6 text-center  font-semibold sm:text-4xl sm:mb-2">
           Login To ChatBox
         </h1>
         <p className="text-center text-2xl">One to one personal chats</p>
