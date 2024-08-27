@@ -9,6 +9,9 @@ import Cookies from "universal-cookie";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const userData = useAppSelector((state) => state.rootstate.userdata);
+  const openSidebar = useAppSelector(
+    (state) => state.rootstate.counter.openSideBar
+  );
   const cookies = new Cookies();
 
   const [isLoggedIn, setisLoggedIn] = useState(false);
@@ -21,17 +24,27 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   }, [userData]);
 
   return (
-    <main className="flex items-start justify-start w-full p-6 container">
+    <main className="flex items-start justify-start w-full p-6 container lg:py-6 px-4">
       {!isLoggedIn ? (
         <AuthComponent />
       ) : (
         <>
-          <div className={`max-w-[480px] w-full space-y-4 lg:hidden`}>
+          <div
+            className={`max-w-[480px] w-full space-y-4 lg:absolute lg:max-w-[calc(100%-30px)] transition-all duration-500 ease-in-out z-[99] lg:w-full  ${
+              openSidebar
+                ? "lg:translate-x-0"
+                : "lg:-translate-x-[calc(100%+32px)] "
+            }`}
+          >
             <UserDetails />
             <Searchbar />
             <ChatList />
           </div>
-          <div className={`max-w-[calc(100%-480px)] w-full search_bar ml-8 rounded-[25px] h-[calc(100vh-62px)] lg:max-w-full lg:ml-0`}>
+          <div
+            className={`max-w-[calc(100%-480px)] w-full search_bar chat_body ml-8 rounded-[25px] h-[calc(100vh-62px)] lg:max-w-full transition-all duration-300 ease-in-out lg:ml-0 lg:m-0  ${
+              openSidebar ? "opacity-0" : "opacity-100"
+            }`}
+          >
             {children}
           </div>
         </>

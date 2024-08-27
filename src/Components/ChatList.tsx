@@ -4,6 +4,7 @@ import { chatlist } from "@/lib/mock/chatlist.mock";
 
 import { useAppSelector } from "@/Redux/hooks";
 import { addChatRoom, ChatRoom } from "@/Redux/slices/ChatroomSlice";
+import { toggleSidebar } from "@/Redux/slices/globalSlice";
 import Avatar from "@/UI/CustomAvatar/Avatar";
 import DoubleTick from "@/UI/icons/DoubleTick";
 import { unsubscribe } from "diagnostics_channel";
@@ -112,7 +113,7 @@ const ChatList = () => {
   }, [userData]);
 
   return (
-    <div className="search_bar px-5 pr-2 py-7 rounded-[25px] h-[calc(100vh-220px)]">
+    <div className="search_bar px-5 pr-2 py-7 rounded-[25px] h-[calc(100vh-220px)] lg:bg-white">
       <h3 className="text-2xl mb-4 font-bold">Peoples</h3>
       <ul className="h-[calc(100%-40px)] overflow-auto pr-1">
         {chatRoomList?.map((item, idx) => (
@@ -122,7 +123,8 @@ const ChatList = () => {
           >
             <Link
               href={`/chat/${item.chatId}`}
-              className="flex items-start space-x-2 "
+              className="flex items-start space-x-2"
+              onClick={() => dispatch(toggleSidebar())}
             >
               <Avatar src={item.userimg} alt={item.userName!} />
 

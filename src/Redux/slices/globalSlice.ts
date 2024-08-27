@@ -1,7 +1,8 @@
-import { createSlice,PayloadAction  } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
   value: 0,
+  openSideBar: true,
 };
 
 export const counterSlice = createSlice({
@@ -17,9 +18,12 @@ export const counterSlice = createSlice({
     incrementByAmount: (state, action) => {
       state.value += action.payload;
     },
+    toggleSidebar:(state)=>{
+      state.openSideBar=!state.openSideBar
+    }
   },
 });
 
-export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+export const { increment, decrement, incrementByAmount,toggleSidebar } = counterSlice.actions;
 
 export default counterSlice.reducer;
