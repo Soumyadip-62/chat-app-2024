@@ -18,12 +18,21 @@ export const counterSlice = createSlice({
     incrementByAmount: (state, action) => {
       state.value += action.payload;
     },
-    toggleSidebar:(state)=>{
-      state.openSideBar=!state.openSideBar
-    }
+    toggleSidebar: (state) => {
+      state.openSideBar = !state.openSideBar;
+    },
+    toggleSidebarFalse: (state) => {
+      state.openSideBar = false;
+    },
   },
 });
 
-export const { increment, decrement, incrementByAmount,toggleSidebar } = counterSlice.actions;
+export const {
+  increment,
+  decrement,
+  incrementByAmount,
+  toggleSidebar,
+  toggleSidebarFalse,
+} = counterSlice.actions;
 
 export default counterSlice.reducer;

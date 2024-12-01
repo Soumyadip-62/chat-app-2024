@@ -33,7 +33,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             className={`max-w-[480px] w-full space-y-4 lg:absolute lg:max-w-[calc(100%-30px)] transition-all duration-500 ease-in-out z-[99] lg:w-full  ${
               openSidebar
                 ? "lg:translate-x-0"
-                : "lg:-translate-x-[calc(100%+32px)] "
+                : "lg:-translate-x-[calc(100%+32px)]"
             }`}
           >
             <UserDetails />
@@ -42,7 +42,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </div>
           <div
             className={`max-w-[calc(100%-480px)] w-full search_bar chat_body ml-8 rounded-[25px] h-[calc(100vh-62px)] lg:max-w-full transition-all duration-300 ease-in-out lg:ml-0 lg:m-0  ${
-              openSidebar ? "opacity-0" : "opacity-100"
+              openSidebar ? "md:opacity-0" : "md:opacity-100"
             }`}
           >
             {children}

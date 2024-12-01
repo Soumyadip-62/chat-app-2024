@@ -76,6 +76,9 @@ const Chat = () => {
           setotherUser(
             usersList.filter((item) => item?.uid !== userData?.id).at(0)
           ); // Set other user data
+
+          console.log( usersList.filter((item) => item?.uid !== userData?.id).at(0), "other user");
+          
         }
       } catch (error) {
         console.error("Could not fetch chat room data:", error);

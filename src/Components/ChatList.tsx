@@ -4,7 +4,7 @@ import { chatlist } from "@/lib/mock/chatlist.mock";
 
 import { useAppSelector } from "@/Redux/hooks";
 import { addChatRoom, ChatRoom } from "@/Redux/slices/ChatroomSlice";
-import { toggleSidebar } from "@/Redux/slices/globalSlice";
+import {  toggleSidebar } from "@/Redux/slices/globalSlice";
 import Avatar from "@/UI/CustomAvatar/Avatar";
 import DoubleTick from "@/UI/icons/DoubleTick";
 import { unsubscribe } from "diagnostics_channel";

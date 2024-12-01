@@ -4,14 +4,26 @@ import { addUser, removeUser } from "@/Redux/slices/UserSlice";
 import Avatar from "@/UI/CustomAvatar/Avatar";
 import LogoutIcon from "@/UI/icons/LogoutIcon";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import { useRouter } from "next/router";
+import {
+  Dialog,
+  DialogDescription,
+  DialogPanel,
+  DialogTitle,
+} from "@headlessui/react";
+
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Cookies from "universal-cookie";
+
+// import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 
 const UserDetails = () => {
   const userData = useAppSelector((state) => state.rootstate.userdata);
   const cookies = new Cookies();
   const dispatch = useDispatch();
+  const router = useRouter();
+  let [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     if (cookies.get("user")) {
@@ -21,8 +33,9 @@ const UserDetails = () => {
   }, []);
 
   const handleLogout = () => {
+    cookies.remove("user");
     cookies.remove("user-token");
-    cookies.remove('user') 
+    router.push("/");
     dispatch(removeUser());
   };
 
@@ -43,13 +56,30 @@ const UserDetails = () => {
       />
 
       <div>
-        <h3 className="text-lg font-semibold">{userData.user?.name}</h3>{" "}
+        <h3 className="text-lg font-semibold">{userData.user?.name}</h3>
         <p className="text-sm">{userData.user?.email}</p>
       </div>
 
-      <button className="!ml-auto hover:opacity-50" onClick={handleLogout}>
+      <button
+        className="!ml-auto hover:opacity-50"
+        onClick={() => setIsOpen(true)}
+      >
         <LogoutIcon />
       </button>
+
+      <Dialog
+        open={isOpen}
+        className="size-full fixed top-0 left-0 z-[999] bg-black/50"
+        id="dialog"
+        onClose={() => setIsOpen(false)}
+      >
+        <DialogPanel className="max-w-[550px] m-auto h-full flex">
+          <div className=" m-auto w-full h-auto max-h-[calc(100%-200px)] bg-white">
+            <button onClick={() => setIsOpen(false)}>Deactivate</button>
+            <button onClick={() => setIsOpen(false)}>Cancel</button>
+          </div>
+        </DialogPanel>
+      </Dialog>
     </div>
   );
 };
