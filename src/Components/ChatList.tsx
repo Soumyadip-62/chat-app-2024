@@ -137,7 +137,7 @@ const ChatList = () => {
                 </div>
 
                 <div className="ml-auto flex flex-col items-end">
-                  <p>
+                  <p className="whitespace-nowrap">
                     {(item.lastMessageTimeStamp || Timestamp.now())
                       .toDate()
                       .toLocaleTimeString("en-US", {

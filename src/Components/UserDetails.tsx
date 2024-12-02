@@ -23,7 +23,7 @@ const UserDetails = () => {
   const cookies = new Cookies();
   const dispatch = useDispatch();
   const router = useRouter();
-  let [isOpen, setIsOpen] = useState(true);
+  let [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     if (cookies.get("user")) {
@@ -37,6 +37,7 @@ const UserDetails = () => {
     cookies.remove("user-token");
     router.push("/");
     dispatch(removeUser());
+    setIsOpen(false)
   };
 
   return (
@@ -74,9 +75,14 @@ const UserDetails = () => {
         onClose={() => setIsOpen(false)}
       >
         <DialogPanel className="max-w-[550px] m-auto h-full flex">
-          <div className=" m-auto w-full h-auto max-h-[calc(100%-200px)] bg-white">
-            <button onClick={() => setIsOpen(false)}>Deactivate</button>
-            <button onClick={() => setIsOpen(false)}>Cancel</button>
+          <div className="m-auto w-full h-auto max-h-[calc(100%-200px)] bg-[#eff6fc] rounded-2xl p-4">
+
+            <h3 className="text-3xl mb-10">Are you sure you want to logout?</h3>
+            <div className="flex items-center space-x-4">
+
+            <button onClick={handleLogout} className=" px-4 py-2 text-sm font-medium border border-red-500 text-white bg-red-600 rounded-lg">Logout</button>
+            <button onClick={() => setIsOpen(false)} className="px-4 py-2 text-sm font-medium border border-[#6e00ff] rounded-lg ">Cancel</button>
+            </div>
           </div>
         </DialogPanel>
       </Dialog>

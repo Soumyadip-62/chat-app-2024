@@ -48,6 +48,17 @@ const InputBox = ({ chatRoomid }: InputBoxProps) => {
       console.log(error);
     }
   };
+  const handlekeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Enter" && event.shiftKey) {
+      // Add a new line when Shift + Enter is pressed
+      event.preventDefault(); // Prevent default Enter behavior
+      setinputValue((prevValue) => prevValue + "\n");
+    } else if (event.key === "Enter") {
+      console.log("Enter key pressed!");
+
+      HandleMessageSubmit();
+    }
+  };
 
   return (
     <div className="w-full flex border items-end px-4 py-2.5 rounded-xl h-16">
@@ -64,6 +75,7 @@ const InputBox = ({ chatRoomid }: InputBoxProps) => {
         placeholder="Type a message"
         value={inputValue}
         onChange={handleChange}
+        onKeyDown={handlekeyDown}
       />
       <button
         className="size-11 min-w-14 flex items-center justify-center bg-[#6E00FF] rounded-lg"
