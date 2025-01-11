@@ -35,7 +35,7 @@ const UserDetails = () => {
   const handleLogout = () => {
     cookies.remove("user");
     cookies.remove("user-token");
-    router.push("/");
+    router.push("/auth/login");
     dispatch(removeUser());
     setIsOpen(false)
   };
