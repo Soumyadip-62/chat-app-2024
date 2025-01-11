@@ -6,14 +6,17 @@ import { auth, db, doc, getDoc } from "../../firebase";
 import { useDispatch } from "react-redux";
 import { addUser, User } from "@/Redux/slices/UserSlice";
 import Cookies from "universal-cookie";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 type Loginform = {
   email: string;
   password: string;
 };
 
-const Login = ({ toggleSignUp }: { toggleSignUp: () => void }) => {
+const LoginUI = ({ toggleSignUp }: { toggleSignUp?: () => void }) => {
   const cookies = new Cookies();
+  const router = useRouter()
   const dispatch = useDispatch();
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
@@ -47,6 +50,10 @@ const Login = ({ toggleSignUp }: { toggleSignUp: () => void }) => {
         name: userDoc.name,
         avatar: userDoc.avatar,
       });
+
+      router.push('/')
+
+      
     } else {
       alert("Wrong Email or Password");
     }
@@ -100,8 +107,7 @@ const Login = ({ toggleSignUp }: { toggleSignUp: () => void }) => {
         <div>
           <p>
             Don't have an account?
-            <button onClick={toggleSignUp}>Sign up</button>
-          </p>
+            <Link href='/auth/signup'> {" "}Sign up</Link>          </p>
         </div>
 
         <button className="custom-button mb-4">Login</button>
@@ -110,4 +116,4 @@ const Login = ({ toggleSignUp }: { toggleSignUp: () => void }) => {
   );
 };
 
-export default Login;
+export default LoginUI;

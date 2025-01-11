@@ -2,6 +2,7 @@ import ChatBody from "@/Components/ChatBody";
 import ChatHeader from "@/Components/ChatHeader";
 import InputBox from "@/Components/InputBox";
 import { auth, db, doc, getDoc } from "@/firebase";
+import Layout from "@/Layout/Index";
 import { Message } from "@/lib/types/messages.type";
 import { useAppSelector } from "@/Redux/hooks";
 import { ChatRoom } from "@/Redux/slices/ChatroomSlice";
@@ -90,12 +91,15 @@ const Chat = () => {
   }, [id]); // Dependency array includes chatId
 
   return (
+    <Layout>
+      
     <div className={`px-10 py-5 h-full lg:p-0`}>
       <ChatHeader {...otherUser} />
       <ChatBody messageList={messages} />
 
       <InputBox chatRoomid={id as string} />
     </div>
+    </Layout>
   );
 };
 

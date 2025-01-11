@@ -2,6 +2,8 @@ import { auth, db, doc, setDoc } from "@/firebase";
 import { addUser } from "@/Redux/slices/UserSlice";
 import PasswordField from "@/UI/PasswordField";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { ChangeEvent, FormEventHandler, useState } from "react";
 import { useDispatch } from "react-redux";
 import Cookies from "universal-cookie";
@@ -13,9 +15,9 @@ type InputData = {
   confirmPassword: string;
 };
 
-const SignUp = ({ toggleSignUp }: { toggleSignUp: () => void }) => {
+const SignUpUI = ({ toggleSignUp }: { toggleSignUp?: () => void }) => {
   const dispatch = useDispatch();
-
+    const router = useRouter()
   const cookies = new Cookies();
 
   const [inputData, setinputData] = useState<InputData>({
@@ -61,6 +63,8 @@ const SignUp = ({ toggleSignUp }: { toggleSignUp: () => void }) => {
       cookies.set("user-token", {
         token: user.refreshToken,
       });
+
+      router.push('/')
       cookies.set("user", {
         email: user.email!,
         id: user.uid!,
@@ -133,7 +137,7 @@ const SignUp = ({ toggleSignUp }: { toggleSignUp: () => void }) => {
         <div>
           <p>
             Already have an account?{" "}
-            <button onClick={toggleSignUp}>Login</button>
+            <Link href='/auth/login'>Login</Link>
           </p>
         </div>
 
@@ -143,4 +147,4 @@ const SignUp = ({ toggleSignUp }: { toggleSignUp: () => void }) => {
   );
 };
 
-export default SignUp;
+export default SignUpUI;
