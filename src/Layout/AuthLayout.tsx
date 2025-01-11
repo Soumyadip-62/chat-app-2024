@@ -3,15 +3,17 @@ import { addUser } from '@/Redux/slices/UserSlice';
 import GoogleIcon from '@/UI/icons/GoogleIcon'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { getDoc, doc, setDoc } from 'firebase/firestore';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux';
 import Cookies from 'universal-cookie';
+import { useDispatch } from 'react-redux';
 
 const AuthLayout = ({children}:{children:React.ReactNode}) => {
 
     const cookies = new Cookies();
   const [issignUp, setissignUp] = useState(false);
   const dispatch = useDispatch();
+  const router = useRouter()
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
@@ -40,6 +42,8 @@ const AuthLayout = ({children}:{children:React.ReactNode}) => {
           createdAt: new Date(),
         });
 
+        
+        router.push('/')
         cookies.set("user-token", {
           token: result.user.refreshToken,
          
