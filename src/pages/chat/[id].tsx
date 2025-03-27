@@ -78,8 +78,10 @@ const Chat = () => {
             usersList.filter((item) => item?.uid !== userData?.id).at(0)
           ); // Set other user data
 
-          console.log( usersList.filter((item) => item?.uid !== userData?.id).at(0), "other user");
-          
+          console.log(
+            usersList.filter((item) => item?.uid !== userData?.id).at(0),
+            "other user"
+          );
         }
       } catch (error) {
         console.error("Could not fetch chat room data:", error);
@@ -92,13 +94,12 @@ const Chat = () => {
 
   return (
     <Layout>
-      
-    <div className={`px-10 py-5 h-full lg:p-0`}>
-      <ChatHeader {...otherUser} />
-      <ChatBody messageList={messages} />
+      <div className={`px-10 py-5 h-full lg:p-0`}>
+        <ChatHeader {...otherUser} />
+        <ChatBody messageList={messages} />
 
-      <InputBox chatRoomid={id as string} />
-    </div>
+        <InputBox chatRoomid={id as string} />
+      </div>
     </Layout>
   );
 };

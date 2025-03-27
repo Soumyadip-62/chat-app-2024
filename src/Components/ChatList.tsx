@@ -118,7 +118,7 @@ const ChatList = () => {
       <ul className="h-[calc(100%-40px)] overflow-auto pr-1">
         {chatRoomList?.map((item, idx) => (
           <li
-            className="border-b-[1px] py-3.5 px-2 last:mb-0 last:border-b-0 rounded-lg hover:bg-blue-200"
+            className="border-b-[1px] py-3.5 px-2 last:mb-0 last:border-b-0 border-blue-200 hover:rounded-lg hover:bg-blue-200"
             key={idx}
           >
             <Link

@@ -46,7 +46,6 @@ const AuthLayout = ({children}:{children:React.ReactNode}) => {
         router.push('/')
         cookies.set("user-token", {
           token: result.user.refreshToken,
-         
         });
       } else {
         cookies.set("user-token", {
@@ -58,6 +57,8 @@ const AuthLayout = ({children}:{children:React.ReactNode}) => {
           id: result.user.uid!,
           name: result.user.displayName!,
         });
+        router.push('/')
+
       }
     } catch (error) {
       console.error(error);

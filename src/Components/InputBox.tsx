@@ -61,7 +61,7 @@ const InputBox = ({ chatRoomid }: InputBoxProps) => {
   };
 
   return (
-    <div className="w-full flex border items-end px-4 py-2.5 rounded-xl h-16">
+    <div className="w-full flex border-2 border-black/30 items-end px-4 py-2.5 rounded-xl h-16">
       <div className="relative !cursor-pointer size-11 p-3">
         <input
           type="file"
