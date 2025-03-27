@@ -73,6 +73,7 @@ const Avatar = ({ alt, size, src, className, isEditable }: AvatarProps) => {
               avatar: userDoc.avatar,
             })
           );
+          
 
           cookies.set("user-token", {
             token: user.refreshToken,
