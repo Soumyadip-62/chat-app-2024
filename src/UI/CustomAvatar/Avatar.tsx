@@ -130,7 +130,7 @@ const Avatar = ({ alt, size, src, className, isEditable }: AvatarProps) => {
               <input
                 type="file"
                 accept="image/*"
-                className="absolute top-0 right-0 w-full h-full  opacity-0 cursor-pointer"
+                className="absolute top-0 right-0 w-full h-full opacity-0 cursor-pointer"
                 onChange={handleFileChange}
               />
             </i>

@@ -1,10 +1,24 @@
 import { Message } from "@/lib/types/messages.type";
+import Image from "next/image";
 import React from "react";
 
-const Recievedtext = ({ senderId, text, timeStamp, id }: Message) => {
+const Recievedtext = ({ senderId, text, timeStamp, image, id }: Message) => {
   return (
     <div className="self-start max-w-[530px]" id={id}>
-      <p className="text-base bg-[#e7e7e7] p-3 rounded-[20px] mb-1">{text}</p>
+      <div className="text-base bg-[#e7e7e7] p-3 rounded-[20px] mb-1">
+        {image &&
+          image.map((img, idx) => (
+            <Image
+              key={idx}
+              src={img}
+              alt="image"
+              width={340}
+              height={340}
+              className="mb-1"
+            />
+          ))}
+        <p>{text}</p>
+      </div>
       <span className="pl-2 text-xs">
         {" "}
         {(() => {

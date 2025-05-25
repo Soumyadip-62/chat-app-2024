@@ -1,12 +1,27 @@
 import { Message } from "@/lib/types/messages.type";
+import Image from "next/image";
 import React from "react";
 
-const SentText = ({ senderId, text, timeStamp, id }: Message) => {
+const SentText = ({ senderId, text, timeStamp, image, id }: Message) => {
   return (
     <div className="self-end max-w-[530px] text-end " id={id}>
-      <p className="text-base bg-[#6E00FF] text-white p-3 rounded-[20px] mb-1 text-left">
-        {text}
-      </p>
+      <div className="text-base bg-[#6E00FF] text-white p-3 rounded-[20px] mb-1 text-left">
+        {image && (
+          <div className="grid  grid-flow-row gap-2 grid-cols-[repeat(auto-fit,_minmax(150px,_1fr))]">
+            {image.map((img, idx) => (
+              <Image
+                key={idx}
+                src={img}
+                alt="image"
+                width={340}
+                height={340}
+                className="mb-1 w-full h-full object-cover"
+              />
+            ))}
+          </div>
+        )}
+        <p>{text}</p>
+      </div>
       <span className="pr-2 text-xs">
         {(() => {
           const hours = timeStamp.toDate().getHours();

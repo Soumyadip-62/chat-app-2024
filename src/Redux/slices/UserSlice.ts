@@ -11,6 +11,7 @@ export interface User {
   token?: string;
   avatar?: string;
   createdAt?: Date;
+  deletedChats?: string[]
 }
 interface UserType {
   user: User | null;

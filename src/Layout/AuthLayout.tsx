@@ -67,7 +67,7 @@ const AuthLayout = ({children}:{children:React.ReactNode}) => {
 
   
   return (
-    <div className="size-full flex justify-center items-center">
+    <div className="size-full flex justify-center items-center py-10">
       <div className="login_card max-w-[650px] w-full">
 {children}
 

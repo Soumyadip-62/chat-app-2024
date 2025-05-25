@@ -95,7 +95,7 @@ const Chat = () => {
   return (
     <Layout>
       <div className={`px-10 py-5 h-full lg:p-0`}>
-        <ChatHeader {...otherUser} />
+        <ChatHeader id={id as string} {...otherUser} />
         <ChatBody messageList={messages} />
 
         <InputBox chatRoomid={id as string} />

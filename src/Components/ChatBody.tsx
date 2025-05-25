@@ -22,7 +22,7 @@ const ChatBody = ({ messageList }: ChatBodyProps) => {
     const groupedMessages: { [date: string]: Message[] } = {};
 
     messageList.forEach((msg) => {
-      const dateKey = moment(msg.timeStamp.toDate()).format("YYYY-MM-DD");// Extract YYYY-MM-DD
+      const dateKey = moment(msg.timeStamp.toDate()).format("YYYY-MM-DD"); // Extract YYYY-MM-DD
 
       if (!groupedMessages[dateKey]) {
         groupedMessages[dateKey] = [];
@@ -39,6 +39,8 @@ const ChatBody = ({ messageList }: ChatBodyProps) => {
     );
 
     setFormattedMessages(formattedArray);
+    console.log(formattedArray);
+    
 
     if (endOfMessagesRef.current) {
       endOfMessagesRef.current.scrollIntoView({

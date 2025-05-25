@@ -4,7 +4,7 @@ import { chatlist } from "@/lib/mock/chatlist.mock";
 
 import { useAppSelector } from "@/Redux/hooks";
 import { addChatRoom, ChatRoom } from "@/Redux/slices/ChatroomSlice";
-import {  toggleSidebar } from "@/Redux/slices/globalSlice";
+import { toggleSidebar } from "@/Redux/slices/globalSlice";
 import Avatar from "@/UI/CustomAvatar/Avatar";
 import DoubleTick from "@/UI/icons/DoubleTick";
 import { unsubscribe } from "diagnostics_channel";
@@ -76,7 +76,6 @@ const ChatList = () => {
           chatList.docs.map(async (doc) => {
             const data = doc.data();
             const userData = await getUserData(doc.id);
-
             return {
               id: doc.id,
               lastMessage: data?.lastMessage,
@@ -99,10 +98,24 @@ const ChatList = () => {
           dispatch(addChatRoom(room));
         });
 
-        // Update the local state with the sorted rooms
-        setchatRoomList(sortedRooms);
 
-        console.log("Rooms:", rooms);
+
+
+
+
+        const userRef = doc(db, "users", userData.id);
+        const userDoc = await getDoc(userRef);
+        const userdata =  userDoc.data()
+        
+
+
+
+        // Update the local state with the sorted rooms
+        setchatRoomList(sortedRooms.filter(room => !userdata?.deletedChats?.includes(room.chatId as string)));
+       
+        
+
+        console.log("Rooms:", sortedRooms);
       } catch (error) {
         console.error("Failed to fetch chat rooms:", error);
       }

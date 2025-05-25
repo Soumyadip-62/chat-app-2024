@@ -16,7 +16,7 @@ type Loginform = {
 
 const LoginUI = ({ toggleSignUp }: { toggleSignUp?: () => void }) => {
   const cookies = new Cookies();
-  const router = useRouter()
+  const router = useRouter();
   const dispatch = useDispatch();
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
@@ -51,9 +51,7 @@ const LoginUI = ({ toggleSignUp }: { toggleSignUp?: () => void }) => {
         avatar: userDoc.avatar,
       });
 
-      router.push('/')
-
-      
+      router.push("/");
     } else {
       alert("Wrong Email or Password");
     }
@@ -107,7 +105,8 @@ const LoginUI = ({ toggleSignUp }: { toggleSignUp?: () => void }) => {
         <div>
           <p>
             Don't have an account?
-            <Link href='/auth/signup'> {" "}Sign up</Link>          </p>
+            <Link href="/auth/signup"> Sign up</Link>{" "}
+          </p>
         </div>
 
         <button className="custom-button mb-4">Login</button>
