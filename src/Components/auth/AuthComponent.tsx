@@ -68,7 +68,7 @@ const AuthComponent = () => {
     <div className="size-full flex justify-center items-center">
       <div className="login_card max-w-[650px] w-full">
         {issignUp ? (
-          <SignUp toggleSignUp={() => setissignUp(false)} />
+          <SignUp  />
         ) : (
           <Login toggleSignUp={() => setissignUp(true)} />
         )}

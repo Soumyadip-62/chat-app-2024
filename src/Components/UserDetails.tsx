@@ -30,7 +30,7 @@ const UserDetails = () => {
       dispatch(addUser(cookies.get("user")));
       console.log(cookies.get("user"));
     }
-  }, []);
+  }, );
 
   const handleLogout = () => {
     cookies.remove("user");

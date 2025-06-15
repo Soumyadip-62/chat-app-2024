@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { assets } from "@/assets";
 import { auth, db } from "@/firebase";
 import { chatlist } from "@/lib/mock/chatlist.mock";

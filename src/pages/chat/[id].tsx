@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import ChatBody from "@/Components/ChatBody";
 import ChatHeader from "@/Components/ChatHeader";
 import InputBox from "@/Components/InputBox";

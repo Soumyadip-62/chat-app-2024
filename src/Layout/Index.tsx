@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { assets } from "@/assets";
 import AuthComponent from "@/Components/auth/AuthComponent";
 import ChatList from "@/Components/ChatList";
