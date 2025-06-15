@@ -3,6 +3,9 @@ import Image from "next/image";
 import React from "react";
 
 const Recievedtext = ({ senderId, text, timeStamp, image, id }: Message) => {
+
+  console.log(image, "Image data");
+  
   return (
     <div className="self-start max-w-[530px]" id={id}>
       <div className="text-base bg-[#e7e7e7] p-3 rounded-[20px] mb-1">
@@ -20,7 +23,7 @@ const Recievedtext = ({ senderId, text, timeStamp, image, id }: Message) => {
         <p>{text}</p>
       </div>
       <span className="pl-2 text-xs">
-        {" "}
+      
         {(() => {
           const hours = timeStamp.toDate().getHours();
           const minutes = timeStamp.toDate().getMinutes();

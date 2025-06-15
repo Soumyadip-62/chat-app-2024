@@ -3,6 +3,8 @@ import Image from "next/image";
 import React from "react";
 
 const SentText = ({ senderId, text, timeStamp, image, id }: Message) => {
+console.log(image, "Image data in sent ")
+
   return (
     <div className="self-end max-w-[530px] text-end " id={id}>
       <div className="text-base bg-[#6E00FF] text-white p-3 rounded-[20px] mb-1 text-left">

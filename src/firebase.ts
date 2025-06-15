@@ -10,18 +10,21 @@ import {
 } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
+
+
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBb_YlMcZuz8NWmyV1F2ejmRLB1SHYf8_s",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: "chat-2024-6897a.firebaseapp.com",
   projectId: "chat-2024-6897a",
   storageBucket: "chat-2024-6897a.appspot.com",
-  messagingSenderId: "837498699064",
-  appId: "1:837498699064:web:d700aa4a28dcea666295cd",
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app)
+const storage = getStorage(app);
 
-export { auth, db, doc, setDoc, serverTimestamp, getDoc, addDoc , storage};
+export { auth, db, doc, setDoc, serverTimestamp, getDoc, addDoc, storage };
