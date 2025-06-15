@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { auth } from "@/firebase";
 import { useAppSelector } from "@/Redux/hooks";
 import { addUser, removeUser } from "@/Redux/slices/UserSlice";
@@ -30,7 +31,7 @@ const UserDetails = () => {
       dispatch(addUser(cookies.get("user")));
       console.log(cookies.get("user"));
     }
-  }, );
+  }, []);
 
   const handleLogout = () => {
     cookies.remove("user");
@@ -80,8 +81,8 @@ const UserDetails = () => {
             <h3 className="text-3xl mb-10">Are you sure you want to logout?</h3>
             <div className="flex items-center space-x-4">
 
-            <button onClick={handleLogout} className=" px-4 py-2 text-sm font-medium border border-red-500 text-white bg-red-600 rounded-lg">Logout</button>
-            <button onClick={() => setIsOpen(false)} className="px-4 py-2 text-sm font-medium border border-[#6e00ff] rounded-lg ">Cancel</button>
+              <button onClick={handleLogout} className=" px-4 py-2 text-sm font-medium border border-red-500 text-white bg-red-600 rounded-lg">Logout</button>
+              <button onClick={() => setIsOpen(false)} className="px-4 py-2 text-sm font-medium border border-[#6e00ff] rounded-lg ">Cancel</button>
             </div>
           </div>
         </DialogPanel>
