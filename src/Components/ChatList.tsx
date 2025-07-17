@@ -106,15 +106,15 @@ const ChatList = () => {
 
         const userRef = doc(db, "users", userData.id);
         const userDoc = await getDoc(userRef);
-        const userdata =  userDoc.data()
-        
+        const userdata = userDoc.data()
+
 
 
 
         // Update the local state with the sorted rooms
         setchatRoomList(sortedRooms.filter(room => !userdata?.deletedChats?.includes(room.chatId as string)));
-       
-        
+
+
 
         console.log("Rooms:", sortedRooms);
       } catch (error) {
@@ -130,6 +130,41 @@ const ChatList = () => {
     <div className="search_bar px-5 pr-2 py-7 rounded-[25px] h-[calc(100vh-220px)] lg:bg-white">
       <h3 className="text-2xl mb-4 font-bold">Peoples</h3>
       <ul className="h-[calc(100%-40px)] overflow-auto pr-1">
+        <li
+          className="border-b-[1px] py-3.5 px-2 last:mb-0 last:border-b-0 border-blue-200 hover:rounded-lg hover:bg-blue-200"
+        >
+          <Link
+            href={`/chatgpt`}
+            className="flex items-start space-x-2"
+            onClick={() => dispatch(toggleSidebar())}
+          >
+            <Avatar src={assets.chatgpt} alt={'ChatGPT'} />
+            <div className="max-w-[calc(100%-64px)] flex w-full">
+              <div className="w-[calc(100%-65px)]">
+                <h4 className="text-lg font-bold">ChatGPT</h4>
+                <p className="text-base text-gray-500 font-medium whitespace-nowrap text-ellipsis overflow-hidden">
+                  Hello, I am ChatGPT. How can I help you today?
+                </p>
+              </div>
+
+              <div className="ml-auto flex flex-col items-end">
+                {/* <p className="whitespace-nowrap">
+                    {(item.lastMessageTimeStamp || Timestamp.now())
+                      .toDate()
+                      .toLocaleTimeString("en-US", {
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true,
+                      })}
+                  </p> */}
+
+                {/* <i>
+                    <DoubleTick />
+                  </i> */}
+              </div>
+            </div>
+          </Link>
+        </li>
         {chatRoomList?.map((item, idx) => (
           <li
             className="border-b-[1px] py-3.5 px-2 last:mb-0 last:border-b-0 border-blue-200 hover:rounded-lg hover:bg-blue-200"

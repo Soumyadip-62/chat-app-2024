@@ -8,9 +8,9 @@ import React, { useState } from 'react'
 import Cookies from 'universal-cookie';
 import { useDispatch } from 'react-redux';
 
-const AuthLayout = ({children}:{children:React.ReactNode}) => {
+const AuthLayout = ({ children }: { children: React.ReactNode }) => {
 
-    const cookies = new Cookies();
+  const cookies = new Cookies();
   const [issignUp, setissignUp] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter()
@@ -42,7 +42,7 @@ const AuthLayout = ({children}:{children:React.ReactNode}) => {
           createdAt: new Date(),
         });
 
-        
+
         router.push('/')
         cookies.set("user-token", {
           token: result.user.refreshToken,
@@ -65,13 +65,13 @@ const AuthLayout = ({children}:{children:React.ReactNode}) => {
     }
   };
 
-  
+
   return (
     <div className="size-full flex justify-center items-center py-10">
       <div className="login_card max-w-[650px] w-full">
-{children}
+        {children}
 
-<button
+        <button
           className="custom-button !bg-white !text-black"
           onClick={signInWithGoogle}
         >
@@ -80,8 +80,8 @@ const AuthLayout = ({children}:{children:React.ReactNode}) => {
           </i>{" "}
           Login with Google
         </button>
-        </div>
-        </div>
+      </div>
+    </div>
   )
 }
 
