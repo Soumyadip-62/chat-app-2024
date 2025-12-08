@@ -130,7 +130,7 @@ const ChatList = () => {
     <div className="search_bar px-5 pr-2 py-7 rounded-[25px] h-[calc(100vh-220px)] lg:bg-white">
       <h3 className="text-2xl mb-4 font-bold">Peoples</h3>
       <ul className="h-[calc(100%-40px)] overflow-auto pr-1">
-        <li
+        {/* <li
           className="border-b-[1px] py-3.5 px-2 last:mb-0 last:border-b-0 border-blue-200 hover:rounded-lg hover:bg-blue-200"
         >
           <Link
@@ -148,23 +148,11 @@ const ChatList = () => {
               </div>
 
               <div className="ml-auto flex flex-col items-end">
-                {/* <p className="whitespace-nowrap">
-                    {(item.lastMessageTimeStamp || Timestamp.now())
-                      .toDate()
-                      .toLocaleTimeString("en-US", {
-                        hour: "numeric",
-                        minute: "numeric",
-                        hour12: true,
-                      })}
-                  </p> */}
 
-                {/* <i>
-                    <DoubleTick />
-                  </i> */}
               </div>
             </div>
           </Link>
-        </li>
+        </li> */}
         {chatRoomList?.map((item, idx) => (
           <li
             className="border-b-[1px] py-3.5 px-2 last:mb-0 last:border-b-0 border-blue-200 hover:rounded-lg hover:bg-blue-200"
