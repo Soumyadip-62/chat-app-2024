@@ -53,11 +53,15 @@ const ChatBody = ({ messageList }: ChatBodyProps) => {
   // const [currentUser, setcurrentUser] = useState(2);
   const currentUser = auth.currentUser;
   return (
-    <div className="py-4 h-[calc(100%-160px)]  overflow-auto -mr-3 pr-3">
+    <div className="py-6 h-[calc(100%-140px)] overflow-auto -mr-2 pr-2">
       <div className="flex flex-col space-y-4 h-full">
         {formattedMessages.map(({ date, chatlist }, dateIdx) => (
-          <div key={date}>
-            <h3 className="text-center py-2">{date}</h3>
+          <div key={date} className="flex flex-col space-y-4">
+            <div className="flex justify-center my-3">
+              <span className="text-[10px] font-semibold text-gray-400 bg-white/5 border border-white/5 px-3 py-1 rounded-full uppercase tracking-wider">
+                {date}
+              </span>
+            </div>
             <div className="flex flex-col space-y-4 h-full">
               {chatlist.map((item, idx) => {
                 const isLastElement =

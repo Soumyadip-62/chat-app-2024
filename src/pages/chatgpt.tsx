@@ -3,8 +3,7 @@ import ChatBody from '@/Components/ChatBody'
 import ChatHeader from '@/Components/ChatHeader'
 import InputBox from '@/Components/InputBox'
 import Layout from '@/Layout/Index'
-import ClipIcon from '@/UI/icons/ClipIcon'
-import Sendicon from '@/UI/icons/Sendicon'
+import { Send } from "lucide-react";
 import React from 'react'
 
 const chatgpt = () => {
@@ -42,7 +41,7 @@ const chatgpt = () => {
                             className="size-11 min-w-14 flex items-center justify-center bg-[#6E00FF] rounded-lg"
                         //   onClick={handleMessageSubmit}
                         >
-                            <Sendicon />
+                            <Send size={16} />
                         </button>
                     </div>
                 </div>

@@ -1,6 +1,5 @@
 import React, { HTMLAttributes, useState } from "react";
-import EyeOpenIcon from "../icons/EyeOpenIcon";
-import EyeCloseicon from "../icons/EyeCloseicon";
+import { Eye, EyeOff } from "lucide-react";
 
 interface PasswordFieldprops extends HTMLAttributes<HTMLInputElement> {
   value?: string;
@@ -23,8 +22,8 @@ const PasswordField = ({ value, name, ...props }: PasswordFieldprops) => {
         {...props}
       />
 
-      <button className="" onClick={togglePassword}>
-        {showPassword ? <EyeOpenIcon /> : <EyeCloseicon />}
+      <button className="text-gray-400 hover:text-gray-600 focus:outline-none" onClick={togglePassword} type="button">
+        {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
       </button>
     </div>
   );

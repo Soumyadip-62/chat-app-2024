@@ -23,6 +23,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     }
   }, [router, userData]);
 
+  useEffect(() => {
+    const userId = userData?.user?.id || userData?.user?.uid;
+    if (userId) {
+      import("@/lib/notifications").then(({ requestNotificationPermission, setupForegroundListener }) => {
+        requestNotificationPermission(userId);
+        setupForegroundListener();
+      });
+    }
+  }, [userData]);
+
   return (
     <main className="flex items-start justify-start w-full p-6 container lg:py-6 px-4">
       <>

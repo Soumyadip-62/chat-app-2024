@@ -88,16 +88,16 @@ const SignUpUI = () => {
 
   return (
     <>
-      <div className="mb-20">
-        <h1 className="text-6xl mb-6 text-center  font-semibold sm:text-4xl sm:mb-2">
-          SignUp To ChatBox
+      <div className="mb-8">
+        <h1 className="text-4xl mb-2 text-center font-bold text-gray-100 sm:text-3xl">
+          SignUp to ChatBox
         </h1>
-        <p className="text-center text-2xl">One to one personal chats</p>
+        <p className="text-center text-base text-gray-400">One-to-one personal chats</p>
       </div>
-      <form className="w-full" onSubmit={handleSubmit(handleFormSubmit)}>
-        <div className="flex flex-col w-full mb-3">
-          <label htmlFor="email" className="mb-2 ml-1 text-lg font-semibold">
-            User name
+      <form className="w-full flex flex-col space-y-4" onSubmit={handleSubmit(handleFormSubmit)}>
+        <div className="flex flex-col w-full">
+          <label htmlFor="user_name" className="mb-1.5 ml-1 text-sm font-medium text-gray-300">
+            Username
           </label>
           <Controller
             control={control}
@@ -112,11 +112,11 @@ const SignUpUI = () => {
               />
             )}
           />
-          {errors.user_name && <p className="text-red-600">{errors.user_name.message}</p>}
-
+          {errors.user_name && <p className="text-red-400 text-xs mt-1 ml-1">{errors.user_name.message}</p>}
         </div>
-        <div className="flex flex-col w-full mb-3">
-          <label htmlFor="email" className="mb-2 ml-1 text-lg font-semibold">
+
+        <div className="flex flex-col w-full">
+          <label htmlFor="email" className="mb-1.5 ml-1 text-sm font-medium text-gray-300">
             Email
           </label>
           <Controller
@@ -127,17 +127,16 @@ const SignUpUI = () => {
               <input
                 {...field}
                 type="email"
-                placeholder="Enter your mail"
+                placeholder="Enter your email"
                 className="common-input"
-
               />
             )}
           />
-          {errors.email && <p className="text-red-600">{errors.email.message}</p>}
-
+          {errors.email && <p className="text-red-400 text-xs mt-1 ml-1">{errors.email.message}</p>}
         </div>
-        <div className="flex flex-col w-full mb-3">
-          <label htmlFor="password" className="mb-2 ml-1 text-lg font-semibold">
+
+        <div className="flex flex-col w-full">
+          <label htmlFor="password" className="mb-1.5 ml-1 text-sm font-medium text-gray-300">
             Password
           </label>
           <Controller
@@ -147,15 +146,14 @@ const SignUpUI = () => {
             render={({ field }) => (
               <PasswordField
                 {...field}
-
               />
             )}
           />
-          {errors.password && <p className="text-red-600">{errors.password.message}</p>}
-
+          {errors.password && <p className="text-red-400 text-xs mt-1 ml-1">{errors.password.message}</p>}
         </div>
-        <div className="flex flex-col w-full mb-3">
-          <label htmlFor="password" className="mb-2 ml-1 text-lg font-semibold">
+
+        <div className="flex flex-col w-full">
+          <label htmlFor="confirmPassword" className="mb-1.5 ml-1 text-sm font-medium text-gray-300">
             Confirm Password
           </label>
           <Controller
@@ -165,21 +163,22 @@ const SignUpUI = () => {
             render={({ field }) => (
               <PasswordField
                 {...field}
-
               />
             )}
           />
-          {errors.password && <p className="text-red-600">{errors.confirmPassword?.message}</p>}
-
+          {errors.confirmPassword && <p className="text-red-400 text-xs mt-1 ml-1">{errors.confirmPassword?.message}</p>}
         </div>
 
-        <div>
+        <div className="text-center text-sm text-gray-400 pt-2">
           <p>
-            Already have an account? <Link href="/auth/login">Login</Link>
+            Already have an account?{" "}
+            <Link href="/auth/login" className="text-violet-400 hover:text-violet-300 font-semibold transition-colors duration-200">
+              Login
+            </Link>
           </p>
         </div>
 
-        <button className="custom-button mb-4">Sign Up</button>
+        <button className="custom-button !mt-6">Sign Up</button>
       </form>
     </>
   );

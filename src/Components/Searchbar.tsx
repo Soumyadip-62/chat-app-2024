@@ -7,7 +7,7 @@ import {
 } from "@/Redux/slices/ChatroomSlice";
 import { User } from "@/Redux/slices/UserSlice";
 import Avatar from "@/UI/CustomAvatar/Avatar";
-import SearchIcon from "@/UI/icons/SearchIcon";
+import { Search } from "lucide-react";
 import {
   addDoc,
   collection,
@@ -52,8 +52,8 @@ const Searchbar = () => {
           usersList.filter(
             (item) =>
               item.name?.toLowerCase().startsWith(inputValue) &&
-              currentUser?.uid !== item.id
-          )
+              currentUser?.uid !== item.id,
+          ),
         );
         console.log("Users List:", usersList);
         return usersList;
@@ -75,30 +75,30 @@ const Searchbar = () => {
 
       const usersList = await Promise.all(
         Chatroom.users.map(async (item) =>
-          (await getDoc(doc(db, "users", item?.id!))).data()
-        )
+          (await getDoc(doc(db, "users", item?.id!))).data(),
+        ),
       );
       console.log(usersList.at(0));
-      // Work from this section tommorrow just filter the logged in user from users list
-      return usersList.filter((item) => item?.uid !== userData?.id).at(0);
+      return usersList.filter((item) => item?.uid !== (userData?.id || userData?.uid)).at(0);
     } catch (error) {
       console.error("Failed to fetch chat rooms:", error);
     }
   };
 
   const GetChatList = async () => {
-    if (!userData?.id) {
+    const userId = userData?.id || userData?.uid;
+    if (!userId) {
       console.error("User ID is undefined");
       return;
     }
 
     try {
       const chatListRef = collection(db, "chatroom");
-      const currentUserRef = doc(db, "users", userData.id);
+      const currentUserRef = doc(db, "users", userId);
 
       const q = query(
         chatListRef,
-        where("users", "array-contains", currentUserRef)
+        where("users", "array-contains", currentUserRef),
       );
 
       const querySnapshot = await getDocs(q);
@@ -119,7 +119,7 @@ const Searchbar = () => {
             userimg: await getUserData(item.id).then((data) => data?.avatar),
             userName: await getUserData(item.id).then((data) => data?.name),
             chatId: item.id,
-          })
+          }),
         );
       });
 
@@ -156,11 +156,11 @@ const Searchbar = () => {
 
         // Check if the chatroom also contains the current user
         const containsCurrentUser = users.some(
-          (userDoc: any) => userDoc.id === currentUser.uid
+          (userDoc: any) => userDoc.id === currentUser.uid,
         );
 
         return containsCurrentUser ? { id: chatRoomId, ...chatRoomData } : null;
-      })
+      }),
     );
 
     // Filter out null values
@@ -188,33 +188,33 @@ const Searchbar = () => {
     }
   };
   return (
-    <div className="shadow-xl rounded-[16px] w-full h-16 bg-white flex items-center justify-normal px-4 search_bar relative">
+    <div className="w-full h-14 rounded-2xl flex items-center justify-between px-4 glass-panel z-10 relative shadow-lg">
       <input
         type="text"
-        className="bg-transparent w-full outline-none text-black p-4 text-lg font-medium"
-        placeholder="Search "
+        className="bg-transparent w-full outline-none text-white px-2 text-base font-medium placeholder:text-gray-500"
+        placeholder="Search users..."
         value={inputValue}
         onChange={handleInputOnchange}
       />
 
       {searchResults.length > 0 && (
-        <div className="absolute top-[70px] left-0 z-30 w-full bg-white search_bar rounded-lg px-4 py-2">
-          <ul>
+        <div className="absolute top-[64px] left-0 z-50 w-full glass-panel rounded-2xl p-2 shadow-2xl border border-white/10 backdrop-blur-md">
+          <ul className="space-y-1">
             {searchResults.map((item, idx) => (
               <li
-                className="font-medium text-sm hover:opacity-45 transition-all duration-500 ease-in-out cursor-pointer py-2 flex items-center space-x-3"
+                className="font-medium text-sm hover:bg-white/5 hover:scale-[1.01] transition-all duration-300 rounded-xl cursor-pointer p-2 flex items-center space-x-3 text-gray-200"
                 key={idx}
                 onClick={() => handleNewChat(item.uid!)}
               >
                 <Avatar src={item.avatar!} alt={item.name!} />
-                <p className="text-base">{item.name}</p>
+                <p className="text-sm font-semibold">{item.name}</p>
               </li>
             ))}
           </ul>
         </div>
       )}
-      <button>
-        <SearchIcon />
+      <button className="text-gray-400 hover:text-white transition-colors duration-300 p-1">
+        <Search size={20} />
       </button>
     </div>
   );

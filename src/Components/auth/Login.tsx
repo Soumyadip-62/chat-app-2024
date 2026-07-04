@@ -71,28 +71,28 @@ const LoginUI = ({ toggleSignUp }: { toggleSignUp?: () => void }) => {
 
   return (
     <>
-      <div className="mb-20">
-        <h1 className="text-6xl mb-6 text-center  font-semibold sm:text-4xl sm:mb-2">
-          Login To ChatBox
+      <div className="mb-8">
+        <h1 className="text-4xl mb-2 text-center font-bold text-gray-100 sm:text-3xl">
+          Login to ChatBox
         </h1>
-        <p className="text-center text-2xl">One to one personal chats</p>
+        <p className="text-center text-base text-gray-400">One-to-one personal chats</p>
       </div>
-      <form className="w-full" onSubmit={handleFormSubmit}>
-        <div className="flex flex-col w-full mb-3">
-          <label htmlFor="email" className="mb-2 ml-1 text-lg font-semibold">
+      <form className="w-full flex flex-col space-y-4" onSubmit={handleFormSubmit}>
+        <div className="flex flex-col w-full">
+          <label htmlFor="email" className="mb-1.5 ml-1 text-sm font-medium text-gray-300">
             Email
           </label>
           <input
             type="email"
-            placeholder="Enter your mail"
+            placeholder="Enter your email"
             className="common-input"
             name="email"
             value={loginForm?.email}
             onChange={handleChange}
           />
         </div>
-        <div className="flex flex-col w-full mb-3">
-          <label htmlFor="password" className="mb-2 ml-1 text-lg font-semibold">
+        <div className="flex flex-col w-full">
+          <label htmlFor="password" className="mb-1.5 ml-1 text-sm font-medium text-gray-300">
             Password
           </label>
           <PasswordField
@@ -102,14 +102,16 @@ const LoginUI = ({ toggleSignUp }: { toggleSignUp?: () => void }) => {
           />
         </div>
 
-        <div>
+        <div className="text-center text-sm text-gray-400 pt-2">
           <p>
-            Don't have an account?
-            <Link href="/auth/signup"> Sign up</Link>{" "}
+            Don't have an account?{" "}
+            <Link href="/auth/signup" className="text-violet-400 hover:text-violet-300 font-semibold transition-colors duration-200">
+              Sign up
+            </Link>
           </p>
         </div>
 
-        <button className="custom-button mb-4">Login</button>
+        <button className="custom-button !mt-6">Login</button>
       </form>
     </>
   );

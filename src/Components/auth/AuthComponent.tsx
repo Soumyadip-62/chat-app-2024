@@ -65,21 +65,24 @@ const AuthComponent = () => {
   };
 
   return (
-    <div className="size-full flex justify-center items-center">
-      <div className="login_card max-w-[650px] w-full">
+    <div className="min-h-screen w-full flex justify-center items-center py-10 px-4">
+      <div className="glass-panel max-w-[520px] w-full p-8 md:p-6 rounded-[24px] shadow-2xl flex flex-col">
         {issignUp ? (
           <SignUp  />
         ) : (
           <Login toggleSignUp={() => setissignUp(true)} />
         )}
+        <div className="relative flex py-4 items-center">
+          <div className="flex-grow border-t border-white/10"></div>
+          <span className="flex-shrink mx-4 text-gray-500 text-sm">or</span>
+          <div className="flex-grow border-t border-white/10"></div>
+        </div>
         <button
-          className="custom-button !bg-white !text-black"
+          className="w-full py-3.5 px-4 font-semibold rounded-xl border border-white/10 bg-white/5 text-white hover:bg-white/10 transition-all duration-300 flex items-center justify-center gap-3 text-lg"
           onClick={signInWithGoogle}
         >
-          <i className="mr-2">
-            <GoogleIcon />
-          </i>{" "}
-          Login with Google
+          <GoogleIcon />
+          <span>Continue with Google</span>
         </button>
       </div>
     </div>

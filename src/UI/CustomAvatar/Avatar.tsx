@@ -1,16 +1,13 @@
 import Image from "next/image";
 import React, { useState } from "react";
-import Usericon from "../icons/Usericon";
 import styles from "./avatarstyle.module.css";
-import Editicon from "../icons/Editicon";
-import CrossIcon from "../icons/CrossIcon";
-import SaveIcon from "../icons/SaveIcon";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { db, storage, doc, auth } from "../../firebase";
+import { User as UserIcon, Pencil, X, Save } from "lucide-react";
+import { db, doc, auth } from "../../firebase";
 import Cookies from "universal-cookie";
 import { addUser, User } from "@/Redux/slices/UserSlice";
 import { getDoc, updateDoc } from "firebase/firestore";
 import { useDispatch } from "react-redux";
+import axios from "axios";
 
 type AvatarProps = {
   src: string;
@@ -45,10 +42,25 @@ const Avatar = ({ alt, size, src, className, isEditable }: AvatarProps) => {
   const handleImageSave = async () => {
     if (!selectedImage) return;
     try {
-      const storageRef = ref(storage, `displayImages/${selectedImage.name}`);
-      await uploadBytes(storageRef, selectedImage);
-      const downloaUrl = await getDownloadURL(storageRef);
-      console.log("file is available at : ", downloaUrl);
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+      if (!cloudName || !uploadPreset) {
+        console.error("Cloudinary credentials are not configured.");
+        alert("Cloudinary credentials are not configured. Please add them to your env file.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", selectedImage);
+      formData.append("upload_preset", uploadPreset);
+
+      const res = await axios.post(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        formData
+      );
+      const downloaUrl = res.data.secure_url;
+      console.log("file is available at Cloudinary: ", downloaUrl);
       const user = auth.currentUser;
       if (user) {
         const userRef = doc(db, "users", `${user.uid}`);
@@ -117,16 +129,16 @@ const Avatar = ({ alt, size, src, className, isEditable }: AvatarProps) => {
           />
         ) : (
           <i
-            className={`size-full flex items-center justify-center bg-slate-300`}
+            className={`size-full flex items-center justify-center bg-slate-300 text-slate-600`}
           >
-            <Usericon />
+            <UserIcon size={24} />
           </i>
         )}
 
         {isEditable && (
           <>
             <i className={styles.avatarEdit}>
-              <Editicon />
+              <Pencil size={14} className="text-white" />
               <input
                 type="file"
                 accept="image/*"
@@ -139,11 +151,11 @@ const Avatar = ({ alt, size, src, className, isEditable }: AvatarProps) => {
       </figure>
       {preview && (
         <div className="flex items-center space-x-1 absolute bottom-0 z-[1000] w-full justify-between">
-          <button onClick={removePreview}>
-            <CrossIcon />
+          <button onClick={removePreview} className="bg-black/60 hover:bg-black/80 p-1 rounded-full text-red-400">
+            <X size={16} />
           </button>
-          <button onClick={handleImageSave}>
-            <SaveIcon />
+          <button onClick={handleImageSave} className="bg-black/60 hover:bg-black/80 p-1 rounded-full text-green-400">
+            <Save size={16} />
           </button>
         </div>
       )}

@@ -9,9 +9,7 @@ import {
   addDoc,
 } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-
-
-
+import { getMessaging, isSupported } from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -27,4 +25,12 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-export { auth, db, doc, setDoc, serverTimestamp, getDoc, addDoc, storage };
+// Initialize messaging conditionally on client-side
+const messaging = async () => {
+  if (typeof window !== "undefined" && (await isSupported())) {
+    return getMessaging(app);
+  }
+  return null;
+};
+
+export { auth, db, doc, setDoc, serverTimestamp, getDoc, addDoc, storage, messaging };

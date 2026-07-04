@@ -7,7 +7,7 @@ import { useAppSelector } from "@/Redux/hooks";
 import { addChatRoom, ChatRoom } from "@/Redux/slices/ChatroomSlice";
 import { toggleSidebar } from "@/Redux/slices/globalSlice";
 import Avatar from "@/UI/CustomAvatar/Avatar";
-import DoubleTick from "@/UI/icons/DoubleTick";
+import { CheckCheck } from "lucide-react";
 import { unsubscribe } from "diagnostics_channel";
 import {
   collection,
@@ -48,7 +48,7 @@ const ChatList = () => {
       );
       console.log(usersList.at(0));
       // Work from this section tommorrow just filter the logged in user from users list
-      return usersList.filter((item) => item?.uid !== userData?.id).at(0);
+      return usersList.filter((item) => item?.uid !== (userData?.id || userData?.uid)).at(0);
     } catch (error) {
       console.error("Failed to fetch chat rooms:", error);
     }
@@ -57,13 +57,14 @@ const ChatList = () => {
   useEffect(() => {
     if (!cookies.get("user")) return;
 
-    if (!userData?.id) {
+    const userId = userData?.id || userData?.uid;
+    if (!userId) {
       console.error("User ID is undefined");
       return;
     }
 
     const chatListRef = collection(db, "chatroom");
-    const currentUserRef = doc(db, "users", userData.id);
+    const currentUserRef = doc(db, "users", userId);
 
     const q = query(
       chatListRef,
@@ -104,7 +105,7 @@ const ChatList = () => {
 
 
 
-        const userRef = doc(db, "users", userData.id);
+        const userRef = doc(db, "users", userId);
         const userDoc = await getDoc(userRef);
         const userdata = userDoc.data()
 
@@ -127,54 +128,36 @@ const ChatList = () => {
   }, [userData]);
 
   return (
-    <div className="search_bar px-5 pr-2 py-7 rounded-[25px] h-[calc(100vh-220px)] lg:bg-white">
-      <h3 className="text-2xl mb-4 font-bold">Peoples</h3>
-      <ul className="h-[calc(100%-40px)] overflow-auto pr-1">
-        {/* <li
-          className="border-b-[1px] py-3.5 px-2 last:mb-0 last:border-b-0 border-blue-200 hover:rounded-lg hover:bg-blue-200"
-        >
-          <Link
-            href={`/chatgpt`}
-            className="flex items-start space-x-2"
-            onClick={() => dispatch(toggleSidebar())}
-          >
-            <Avatar src={assets.chatgpt} alt={'ChatGPT'} />
-            <div className="max-w-[calc(100%-64px)] flex w-full">
-              <div className="w-[calc(100%-65px)]">
-                <h4 className="text-lg font-bold">ChatGPT</h4>
-                <p className="text-base text-gray-500 font-medium whitespace-nowrap text-ellipsis overflow-hidden">
-                  Hello, I am ChatGPT. How can I help you today?
-                </p>
-              </div>
-
-              <div className="ml-auto flex flex-col items-end">
-
-              </div>
-            </div>
-          </Link>
-        </li> */}
+    <div className="glass-panel px-4 py-6 rounded-[24px] h-[calc(100vh-220px)] lg:bg-[#121624] lg:border-white/10">
+      <h3 className="text-xl mb-4 font-bold text-gray-100 px-2 flex items-center justify-between">
+        <span>Chats</span>
+        <span className="text-xs bg-violet-600/30 text-violet-300 px-2.5 py-1 rounded-full font-semibold">
+          {chatRoomList?.length || 0}
+        </span>
+      </h3>
+      <ul className="h-[calc(100%-40px)] overflow-auto pr-1 space-y-1">
         {chatRoomList?.map((item, idx) => (
           <li
-            className="border-b-[1px] py-3.5 px-2 last:mb-0 last:border-b-0 border-blue-200 hover:rounded-lg hover:bg-blue-200"
+            className="border-b border-white/5 py-3 px-2 last:mb-0 last:border-b-0 hover:rounded-xl hover:bg-white/5 transition-all duration-300"
             key={idx}
           >
             <Link
               href={`/chat/${item.chatId}`}
-              className="flex items-start space-x-2"
+              className="flex items-center space-x-3"
               onClick={() => dispatch(toggleSidebar())}
             >
               <Avatar src={item.userimg} alt={item.userName!} />
 
-              <div className="max-w-[calc(100%-64px)] flex w-full">
-                <div className="w-[calc(100%-65px)]">
-                  <h4 className="text-lg font-bold">{item.userName}</h4>
-                  <p className="text-base text-gray-500 font-medium whitespace-nowrap text-ellipsis overflow-hidden">
+              <div className="max-w-[calc(100%-56px)] flex w-full items-center justify-between min-w-0">
+                <div className="min-w-0 flex-1 pr-2">
+                  <h4 className="text-sm font-bold text-gray-100 truncate">{item.userName}</h4>
+                  <p className="text-xs text-gray-400 mt-1 whitespace-nowrap text-ellipsis overflow-hidden">
                     {item.lastMessage}
                   </p>
                 </div>
 
-                <div className="ml-auto flex flex-col items-end">
-                  <p className="whitespace-nowrap">
+                <div className="flex flex-col items-end shrink-0">
+                  <p className="text-xs text-gray-500 whitespace-nowrap mb-1">
                     {(item.lastMessageTimeStamp || Timestamp.now())
                       .toDate()
                       .toLocaleTimeString("en-US", {
@@ -184,8 +167,8 @@ const ChatList = () => {
                       })}
                   </p>
 
-                  <i>
-                    <DoubleTick />
+                  <i className="text-violet-400">
+                    <CheckCheck size={16} />
                   </i>
                 </div>
               </div>

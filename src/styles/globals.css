@@ -2,23 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-@l: root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+:root {
+  --foreground-rgb: 243, 244, 246;
+  --background-start-rgb: 11, 13, 19;
+  --background-end-rgb: 15, 18, 25;
 }
 
 body {
-  color: #303030;
-  background-color: #dfeaf7;
+  color: #f3f4f6;
+  background-color: #0b0d13;
+  font-family: "Inter", sans-serif;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(at 5% 5%, rgba(139, 92, 246, 0.08) 0px, transparent 40%),
+    radial-gradient(at 95% 5%, rgba(59, 130, 246, 0.08) 0px, transparent 40%),
+    radial-gradient(at 50% 95%, rgba(167, 139, 250, 0.08) 0px, transparent 40%);
+  background-attachment: fixed;
 }
 
 @layer utilities {
@@ -27,48 +26,60 @@ body {
   }
 
   .common-input {
-    @apply py-4 font-medium outline-0 px-3.5 rounded-xl border;
+    @apply py-3.5 font-medium outline-0 px-4 rounded-xl border border-white/10 bg-white/5 text-white transition-all duration-300 focus:border-violet-500/50 focus:bg-white/10 focus:ring-2 focus:ring-violet-500/20 placeholder:text-gray-500;
   }
+
   .custom-button {
-    @apply py-4 font-medium outline-0 px-3.5 rounded-xl border w-full mt-2 flex items-center justify-center bg-[#6E00FF] text-white border-[#6E00FF] hover:bg-white hover:text-black transition-all duration-700 ease-in-out text-xl;
-    box-shadow: 0px 4px 5px 2px rgba(121, 197, 239, 0.38);
+    @apply py-3.5 font-medium outline-0 px-4 rounded-xl border w-full mt-2 flex items-center justify-center bg-gradient-to-r from-violet-600 to-indigo-600 text-white border-violet-500/20 hover:from-violet-500 hover:to-indigo-500 transition-all duration-300 ease-in-out text-lg font-semibold;
+    box-shadow: 0 4px 15px 0 rgba(124, 58, 237, 0.25);
+  }
+
+  .glass-panel {
+    background: rgba(22, 26, 40, 0.45);
+    /* backdrop-filter: blur(20px); */
+    /* -webkit-backdrop-filter: blur(20px); */
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+
+    @apply backdrop-blur-md;
   }
 }
 
 .search_bar {
-  box-shadow: 0px 4px 5px 2px rgba(121, 197, 239, 0.38);
-
+  background: rgba(22, 26, 40, 0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
 }
 
-@media (max-width:1023px) {
-  
-  .chat_body{
+@media (max-width: 1023px) {
+  .chat_body {
     box-shadow: none;
   }
 }
+
 /* Style the scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   background-color: transparent;
 }
 
 /* Style the scrollbar thumb */
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(121, 197, 239, 0.38);
+  background-color: rgba(255, 255, 255, 0.08);
   border-radius: 10px;
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Style the scrollbar thumb on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #aaa;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Style the scrollbar track */
 ::-webkit-scrollbar-track {
   border-radius: 10px;
-  /* box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); */
 }
 
 /* Style the scrollbar track on hover */

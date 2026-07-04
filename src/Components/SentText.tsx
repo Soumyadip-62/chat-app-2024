@@ -6,10 +6,10 @@ const SentText = ({ senderId, text, timeStamp, image, id }: Message) => {
 console.log(image, "Image data in sent ")
 
   return (
-    <div className="self-end max-w-[530px] text-end " id={id}>
-      <div className="text-base bg-[#6E00FF] text-white p-3 rounded-[20px] mb-1 text-left">
+    <div className="self-end max-w-[70%] text-end" id={id}>
+      <div className="text-sm bg-gradient-to-br from-violet-600 to-indigo-600 text-white py-2.5 px-4 rounded-[18px] rounded-tr-none mb-1 text-left shadow-lg shadow-violet-950/20 border border-violet-500/20">
         {image && (
-          <div className="grid  grid-flow-row gap-2 grid-cols-[repeat(auto-fit,_minmax(150px,_1fr))]">
+          <div className="grid grid-flow-row gap-2 grid-cols-[repeat(auto-fit,_minmax(150px,_1fr))] mb-2 overflow-hidden rounded-lg">
             {image.map((img, idx) => (
               <Image
                 key={idx}
@@ -17,14 +17,14 @@ console.log(image, "Image data in sent ")
                 alt="image"
                 width={340}
                 height={340}
-                className="mb-1 w-full h-full object-cover"
+                className="w-full h-full object-cover rounded-lg"
               />
             ))}
           </div>
         )}
-        <p>{text}</p>
+        <p className="leading-relaxed break-words whitespace-pre-wrap">{text}</p>
       </div>
-      <span className="pr-2 text-xs">
+      <span className="pr-1 text-[10px] text-gray-500 font-medium">
         {(() => {
           const hours = timeStamp.toDate().getHours();
           const minutes = timeStamp.toDate().getMinutes();
