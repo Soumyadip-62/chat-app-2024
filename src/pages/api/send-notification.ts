@@ -5,7 +5,11 @@ import { getMessaging } from "firebase-admin/messaging";
 // Initialize firebase-admin if not already initialized
 if (getApps().length === 0) {
   const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-  if (serviceAccountKey) {
+  const privateKey = process.env.FIREBASE_PRIVATE_KEY;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const projectId = process.env.FIREBASE_PROJECT_ID || "chat-2024-6897a";
+
+  if (serviceAccountKey && serviceAccountKey.trim().startsWith("{")) {
     try {
       const serviceAccount = JSON.parse(serviceAccountKey);
       initializeApp({
@@ -15,6 +19,20 @@ if (getApps().length === 0) {
     } catch (e) {
       console.error("Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY environment variable:", e);
     }
+  } else if (privateKey && clientEmail) {
+    try {
+      const formattedPrivateKey = privateKey.replace(/\\n/g, "\n");
+      initializeApp({
+        credential: cert({
+          projectId,
+          clientEmail,
+          privateKey: formattedPrivateKey,
+        })
+      });
+      console.log("Firebase Admin initialized successfully via individual environment variables.");
+    } catch (e) {
+      console.error("Failed to initialize Firebase Admin via individual variables:", e);
+    }
   } else {
     // Attempt default initialization (e.g. if GCP environment credentials are set)
     try {
@@ -23,7 +41,7 @@ if (getApps().length === 0) {
     } catch (e) {
       console.warn(
         "Firebase Admin could not be initialized automatically. " +
-        "Please configure the FIREBASE_SERVICE_ACCOUNT_KEY environment variable."
+        "Please configure the FIREBASE_SERVICE_ACCOUNT_KEY or FIREBASE_PRIVATE_KEY and FIREBASE_CLIENT_EMAIL environment variables."
       );
     }
   }
